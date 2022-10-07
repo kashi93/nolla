@@ -1,8 +1,8 @@
-const { default: userModel } = require("../../models/user.model");
 import hash from "../../vendor/rainbows/hash";
 
 class CreateUserTest {
   async handler() {
+    const { default: userModel } = require("../../models/user.model");
     for (let i = 0; i < 100; i++) {
       await userModel.create({
         name: i,
