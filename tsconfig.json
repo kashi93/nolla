@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "module": "commonjs",
+    "target": "ES5",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "declaration": false,
+    "noLib": false,
+    "outDir": "",
+    "rootDir": "./lib"
+  }
+}
