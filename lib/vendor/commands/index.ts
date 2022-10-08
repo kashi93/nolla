@@ -3,6 +3,6 @@ import yargs from "yargs";
 module.exports = (() => {
   require("./makeMigration");
   require("./makeMigrate");
-  require("./test");
+  require("./makeModel");
   yargs.parse();
 })();
