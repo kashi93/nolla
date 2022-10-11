@@ -1,7 +1,7 @@
 import { Express } from "express";
 import { Request, Response } from "express";
 import RouteService from "../../app/services/route.service";
-import RouteDefaultService from "../providers/route.default.service";
+const RouteDefaultService = require("../providers/route.default.service");
 
 export default class Route {
   app: Express;
@@ -47,6 +47,8 @@ export default class Route {
         const cb2 = cb();
         if (cb2.data != null && cb2.code != null) {
           return res.status(cb2.code).json(cb2.data);
+        } else if (cb2.view != null && cb2.data != null) {
+          return res.render(cb2.view, cb2.data);
         }
       }
 

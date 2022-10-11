@@ -2,7 +2,13 @@ import { Express } from "express";
 import { dateTime } from "../rainbows/dateTime";
 import { Request } from "express";
 
-export default class RouteDefaultService {
+class RouteDefaultService {
+  boot(app: Express) {
+    this.default(app);
+    this.log(app);
+    this.route(app);
+  }
+
   default(app: Express) {
     const bodyParser = require("body-parser");
     app.use(bodyParser.json());
@@ -35,7 +41,7 @@ export default class RouteDefaultService {
   }
 
   route(app: Express) {
-    const { default: routes } = require("../../routes");
+    const { default: routes } = require("../../routes/web");
     routes(app);
   }
 
@@ -56,3 +62,5 @@ export default class RouteDefaultService {
     };
   }
 }
+
+module.exports = RouteDefaultService;

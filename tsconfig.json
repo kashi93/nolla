@@ -13,5 +13,10 @@
     "outDir": "",
     "rootDir": "./lib"
   },
-  "include": ["lib/**/*.ts", "lib/**/*.js", "lib/tests/unit_list.json"]
+  "include": [
+    "lib/**/*.ts",
+    "lib/**/*.js",
+    "lib/tests/unit_list.json",
+    "lib/resources/views/*"
+  ]
 }

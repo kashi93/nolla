@@ -1,6 +1,5 @@
 import express, { Express } from "express";
 import yargs from "yargs";
-import RouteService from "../../app/services/route.service";
 
 export default yargs.command({
   command: "serve",
@@ -11,8 +10,13 @@ export default yargs.command({
     const host = config("app.app_url");
     const port = config("app.app_port");
     const app_name = config("app.name");
-    const service = new RouteService();
-    service.boot(app);
+
+    for await (const prov of config("app.providers")) {
+      const path = require("path");
+      const p = require(`${path.dirname(require.main?.filename)}/${prov}`);
+      const c = new p();
+      c.boot(app);
+    }
 
     app.listen(
       port,
