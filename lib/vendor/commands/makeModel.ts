@@ -3,7 +3,7 @@ import fs from "fs";
 import chalk from "chalk";
 
 export default yargs.command({
-  command: "create model",
+  command: "create:model",
   describe: "Create a new model class",
   builder: {
     class: {

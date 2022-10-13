@@ -3,7 +3,7 @@ import fs from "fs";
 import chalk from "chalk";
 
 export default yargs.command({
-  command: "create migration",
+  command: "create:migration",
   describe: "Create a new migration files",
   builder: {
     name: {
