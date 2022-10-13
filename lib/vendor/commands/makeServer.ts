@@ -18,6 +18,8 @@ export default yargs.command({
       c.boot(app);
     }
 
+    app.use(express.static(`${process.cwd()}/public`));
+
     app.listen(
       port,
       String(host)

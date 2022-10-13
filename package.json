@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "watchTs": "nodemon --exec ts-node lib/nolla serve",
     "build": "tsc"
   },
   "keywords": [],
@@ -25,20 +25,17 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/express-session": "1.17.0",
     "@types/jest": "^28.1.3",
-    "@types/react": "^18.0.14",
-    "@types/react-dom": "^18.0.5",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.20.1",
     "chalk": "^4.0.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
     "express": "^4.18.1",
-    "express-react-views": "^0.11.0",
     "express-session": "^1.17.3",
     "express-validator": "^6.14.2",
     "mysql": "^2.18.1",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
+    "webpack": "^5.74.0",
     "yargs": "^17.5.1"
   }
 }
