@@ -1,0 +1,11 @@
+{
+  "verbose": true,
+  "ignore": [
+    "public/",
+    "lib/resources/js/",
+    "resources/js/",
+    "package.json",
+    "package-lock.json"
+  ],
+  "delay": 2500
+}

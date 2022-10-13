@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watchTs": "nodemon --exec ts-node lib/nolla serve",
-    "build": "webpack"
+    "serve": "ts-node lib/nolla serve",
+    "dev": "nodemon --exec ts-node lib/nolla serve",
+    "watch": "webpack --mode=development --watch",
+    "build": "tsc",
+    "prod": "webpack  --mode=production"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +24,8 @@
     "babel-loader": "^8.2.5",
     "css-loader": "^6.7.1",
     "nodemon": "^2.0.18",
+    "sass": "^1.55.0",
+    "sass-loader": "^13.1.0",
     "svg-url-loader": "^8.0.0",
     "ts-node": "^10.8.1",
     "typescript": "^4.7.4",
@@ -49,7 +54,6 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
     "yargs": "^17.5.1"
   }
 }

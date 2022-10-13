@@ -11,14 +11,14 @@ export default yargs.command({
     const port = config("app.app_port");
     const app_name = config("app.name");
 
+    app.use(express.static(`${process.cwd()}/public`));
+
     for await (const prov of config("app.providers")) {
       const path = require("path");
       const p = require(`${path.dirname(require.main?.filename)}/${prov}`);
       const c = new p();
       c.boot(app);
     }
-
-    app.use(express.static(`${process.cwd()}/public`));
 
     app.listen(
       port,
