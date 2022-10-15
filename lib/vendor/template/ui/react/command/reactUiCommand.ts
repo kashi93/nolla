@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import chalk from "chalk";
 
 class ReactUiCommand {
   async handle() {
@@ -9,13 +8,7 @@ class ReactUiCommand {
     await this.app();
     await this.webpack();
     await this.pack();
-
-    console.log(chalk.green(`React scaffolding installed successfully.`));
-    console.log(
-      chalk.yellow(
-        `Please run "npm install && npm run prod" to compile your fresh scaffolding.`
-      )
-    );
+    return;
   }
 
   async app() {
@@ -53,8 +46,8 @@ class ReactUiCommand {
       `${process.cwd()}/webpack.config.js`,
       "utf-8"
     );
-    const react_comment = new RegExp(`// "@babel/preset-react"`);
-    app = app.replace(react_comment, `"@babel/preset-react"`);
+    const react_comment = new RegExp(`// module.exports = webpack.react;`);
+    app = app.replace(react_comment, `module.exports = webpack.react;`);
     await fs.promises.writeFile(
       `${process.cwd()}/webpack.config.js`,
       app,
