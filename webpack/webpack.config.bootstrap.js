@@ -1,6 +1,5 @@
 module.exports = () => {
   const path = require("path");
-  const { VueLoaderPlugin } = require("vue-loader");
   return {
     entry: `${process.cwd()}/lib/resources/js/app.js`,
     output: {
@@ -18,16 +17,12 @@ module.exports = () => {
           ],
         },
         {
-          test: /\.vue$/,
-          loader: "vue-loader",
-        },
-        {
           test: /\.s[ac]ss$/i,
-          use: ["css-loader", "sass-loader"],
+          use: ["style-loader", "css-loader", "sass-loader"],
         },
         {
           test: /\.css$/i,
-          use: ["vue-style-loader", "css-loader"],
+          use: ["style-loader", "css-loader"],
         },
         {
           test: /\.m?(js|jsx)$/,
@@ -52,6 +47,5 @@ module.exports = () => {
         },
       ],
     },
-    plugins: [new VueLoaderPlugin()],
   };
 };

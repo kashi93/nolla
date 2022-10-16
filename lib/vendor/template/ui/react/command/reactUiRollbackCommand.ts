@@ -4,6 +4,8 @@ import path from "path";
 class ReactUiRollbackCommand {
   async handle() {
     if (await this.js()) {
+      await this.css();
+      await this.nodeModules();
       await this.app();
       await this.webpack();
       await this.pack();
@@ -24,6 +26,17 @@ class ReactUiRollbackCommand {
       app,
       "utf-8"
     );
+  }
+
+  async nodeModules() {
+    if (fs.existsSync(`${process.cwd()}/node_modules`)) {
+      await fs.promises.rm(`${process.cwd()}/node_modules`, {
+        recursive: true,
+        force: true,
+      });
+      return true;
+    }
+    return false;
   }
 
   async pack() {
@@ -49,8 +62,16 @@ class ReactUiRollbackCommand {
       `${process.cwd()}/webpack.config.js`,
       "utf-8"
     );
-    const react_comment = new RegExp(`module.exports = webpack.react;`);
-    app = app.replace(react_comment, `// module.exports = webpack.react;`);
+
+    app = app
+      .replace(
+        /\/\/ module\.exports = webpack\.react\(\);/i,
+        `module.exports = webpack.react();`
+      )
+      .replace(
+        /module\.exports = webpack\.react\(\);/i,
+        `// module.exports = webpack.react();`
+      );
     await fs.promises.writeFile(
       `${process.cwd()}/webpack.config.js`,
       app,
@@ -66,6 +87,21 @@ class ReactUiRollbackCommand {
     ) {
       await fs.promises.rm(
         `${path.dirname(require.main?.filename)}/resources/js/react`,
+        { recursive: true }
+      );
+      return true;
+    }
+    return false;
+  }
+
+  async css() {
+    if (
+      fs.existsSync(
+        `${path.dirname(require.main?.filename)}/resources/css/react`
+      )
+    ) {
+      await fs.promises.rm(
+        `${path.dirname(require.main?.filename)}/resources/css/react`,
         { recursive: true }
       );
       return true;

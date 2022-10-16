@@ -4,6 +4,7 @@ import path from "path";
 class VueUiRollbackCommand {
   async handle() {
     if (await this.js()) {
+      await this.nodeModules();
       await this.app();
       await this.webpack();
       await this.pack();
@@ -44,13 +45,32 @@ class VueUiRollbackCommand {
     );
   }
 
+  async nodeModules() {
+    if (fs.existsSync(`${process.cwd()}/node_modules`)) {
+      await fs.promises.rm(`${process.cwd()}/node_modules`, {
+        recursive: true,
+        force: true,
+      });
+      return true;
+    }
+    return false;
+  }
+
   async webpack() {
     let app = await fs.promises.readFile(
       `${process.cwd()}/webpack.config.js`,
       "utf-8"
     );
-    const react_comment = new RegExp(`module.exports = webpack.vue;`);
-    app = app.replace(react_comment, `// module.exports = webpack.vue;`);
+
+    app = app
+      .replace(
+        /\/\/ module\.exports = webpack\.vue\(\);/i,
+        `module.exports = webpack.vue();`
+      )
+      .replace(
+        /module\.exports = webpack\.vue\(\);/i,
+        `// module.exports = webpack.vue();`
+      );
     await fs.promises.writeFile(
       `${process.cwd()}/webpack.config.js`,
       app,

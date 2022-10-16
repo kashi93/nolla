@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["node"],
     "module": "commonjs",
     "target": "ES6",
     "noImplicitAny": true,
@@ -16,6 +17,6 @@
     "lib/**/*.ts",
     "lib/**/*.js",
     "lib/tests/unit_list.json",
-    "lib/resources/views/*"
+    "lib/resources/views/**/*"
   ]
 }

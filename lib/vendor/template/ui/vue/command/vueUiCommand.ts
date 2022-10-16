@@ -47,8 +47,19 @@ class VueUiCommand {
       `${process.cwd()}/webpack.config.js`,
       "utf-8"
     );
-    const react_comment = new RegExp(`// module.exports = webpack.vue;`);
-    app = app.replace(react_comment, `module.exports = webpack.vue;`);
+    app = app
+      .replace(
+        /\/\/ module\.exports = webpack\.vue\(\);/i,
+        `module.exports = webpack.vue();`
+      )
+      .replace(
+        /\/\/ module\.exports = webpack\.bootstrap\(\);/i,
+        `module.exports = webpack.bootstrap();`
+      )
+      .replace(
+        /module\.exports = webpack\.bootstrap\(\);/i,
+        `// module.exports = webpack.bootstrap();`
+      );
     await fs.promises.writeFile(
       `${process.cwd()}/webpack.config.js`,
       app,

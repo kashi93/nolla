@@ -46,8 +46,21 @@ class ReactUiCommand {
       `${process.cwd()}/webpack.config.js`,
       "utf-8"
     );
-    const react_comment = new RegExp(`// module.exports = webpack.react;`);
-    app = app.replace(react_comment, `module.exports = webpack.react;`);
+
+    app = app
+      .replace(
+        /\/\/ module\.exports = webpack\.react\(\);/i,
+        `module.exports = webpack.react();`
+      )
+      .replace(
+        /\/\/ module\.exports = webpack\.bootstrap\(\);/i,
+        `module.exports = webpack.bootstrap();`
+      )
+      .replace(
+        /module\.exports = webpack\.bootstrap\(\);/i,
+        `// module.exports = webpack.bootstrap();`
+      );
+
     await fs.promises.writeFile(
       `${process.cwd()}/webpack.config.js`,
       app,
