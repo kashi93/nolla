@@ -3,6 +3,7 @@
   "ignore": [
     "public/",
     "lib/resources/js/",
+    "lib/storage/",
     "resources/js/",
     "package.json",
     "package-lock.json"

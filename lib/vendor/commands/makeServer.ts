@@ -1,5 +1,6 @@
 import express, { Express } from "express";
 import yargs from "yargs";
+import { storeError } from "../error_handler/storeError";
 
 export default yargs.command({
   command: "serve",
@@ -19,6 +20,11 @@ export default yargs.command({
       const c = new p();
       c.boot(app);
     }
+
+    app.use((err: any, req: any, res: any, next: any) => {
+      storeError(err);
+      res.send(err.stack);
+    });
 
     app.listen(
       port,

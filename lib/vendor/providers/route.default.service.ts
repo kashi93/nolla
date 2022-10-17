@@ -45,13 +45,14 @@ class RouteDefaultService {
     routes(app);
   }
 
-  params(req: Request): any[] {
+  params(req: Request, res: Response): any[] {
     const data: any[] = [];
     const keys = Object.getOwnPropertyNames(req.params);
     for (const key of keys) {
       data.push(req.params[key]);
     }
-
+    data.push(req);
+    data.push(res);
     return data;
   }
 
