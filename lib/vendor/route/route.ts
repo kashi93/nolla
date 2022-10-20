@@ -24,7 +24,6 @@ export default class Route {
       try {
         let cb = null;
         new RouteDefaultService()._request(req);
-
         if (Array.isArray(argv)) {
           const path = require("path");
           let controllerPath = `${path.dirname(require.main?.filename)}${
@@ -43,6 +42,8 @@ export default class Route {
         } else {
           cb = await argv(...new RouteDefaultService().params(req, res));
         }
+
+        clearFormValidationSession();
 
         if (typeof cb == "function") {
           const cb2 = cb();
@@ -71,6 +72,7 @@ export default class Route {
     this.app.post(url, async function (req: Request, res: Response, next) {
       try {
         let cb = null;
+        response = res;
         new RouteDefaultService()._request(req);
 
         if (Array.isArray(argv)) {

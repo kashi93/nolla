@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "ts-node lib/nolla serve",
-    "dev": "nodemon --exec ts-node lib/nolla serve",
+    "serve": "nodemon",
+    "dev": "webpack --mode=development",
     "watch": "webpack --mode=development --watch",
     "build": "tsc",
     "prod": "webpack  --mode=production"

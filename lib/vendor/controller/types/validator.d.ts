@@ -1,3 +1,5 @@
+export type Rules = "required" | "email" | `min:${number}`;
+
 export interface Rule {
-  [field: string]: ["required", "email"];
+  [field: string]: Rules[];
 }

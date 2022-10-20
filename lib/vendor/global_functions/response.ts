@@ -1,16 +1,10 @@
-var response: (data: any, code: number) => Function;
+import { Response } from "express";
+var response: Response;
 
 export const thisIsAModule = true;
 
 declare global {
-  var response: (data: any, code: number) => Function;
+  var response: Response;
 }
 
-globalThis.response = (data: any, code: number = 200): Function => {
-  return () => {
-    return {
-      data,
-      code,
-    };
-  };
-};
+globalThis.response = null;

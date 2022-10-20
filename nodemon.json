@@ -8,5 +8,5 @@
     "package.json",
     "package-lock.json"
   ],
-  "delay": 2500
+  "exec": "ts-node lib/nolla serve"
 }

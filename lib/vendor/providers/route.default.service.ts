@@ -1,6 +1,8 @@
 import { Express } from "express";
 import { dateTime } from "../rainbows/dateTime";
 import { Request } from "express";
+import Validator from "../controller/validator";
+import { Rule } from "../controller/types/validator";
 
 class RouteDefaultService {
   boot(app: Express) {
@@ -51,6 +53,7 @@ class RouteDefaultService {
     for (const key of keys) {
       data.push(req.params[key]);
     }
+    req = this.appendToRequest(req);
     data.push(req);
     data.push(res);
     return data;
@@ -61,6 +64,13 @@ class RouteDefaultService {
       ...req.query,
       ...req.body,
     };
+  }
+
+  appendToRequest(req: any) {
+    // req.validate = (rule: Rule) => {
+    //   new Validator().validate(req, rule);
+    // };
+    return req;
   }
 }
 
