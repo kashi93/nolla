@@ -26,5 +26,5 @@ globalThis.clearFormValidationSession = () => {
   setTimeout(() => {
     global.errors = [];
     global.message = "";
-  }, 300);
+  }, 3000);
 };

@@ -43,8 +43,6 @@ export default class Route {
           cb = await argv(...new RouteDefaultService().params(req, res));
         }
 
-        clearFormValidationSession();
-
         if (typeof cb == "function") {
           const cb2 = cb();
           if (cb2.data != null && cb2.code != null) {
@@ -61,6 +59,8 @@ export default class Route {
         next(error);
       }
     });
+
+    return this.callback(url, argv);
   }
 
   post(
@@ -108,5 +108,23 @@ export default class Route {
         next(error);
       }
     });
+
+    return this.callback(url, argv);
+  }
+
+  callback(url: any, argv: any) {
+    return {
+      url,
+      argv,
+      name: function (name: string) {
+        if (routeList.filter((r) => r.name == name).length < 1) {
+          routeList.push({
+            name,
+            url: this.url,
+            argv: this.argv,
+          });
+        }
+      },
+    };
   }
 }

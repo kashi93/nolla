@@ -5,19 +5,19 @@ export const dataToMysqlValue = (val: any) => {
     return "NULL";
   }
 
-  if (dateTime(val) != null) {
-    return `'${dateTime(val)}'`;
-  } else {
-    if (typeof val == "string") {
-      return `'${val}'`;
-    } else if (typeof val == "bigint" || typeof val == "number") {
-      return val;
-    } else if (typeof val == "boolean") {
-      return Number(val);
-    } else if (typeof val == "object") {
-      return `'${JSON.stringify(val)}'`;
+  if (typeof val == "string") {
+    if (dateTime(val) != null) {
+      return `'${dateTime(val)}'`;
     } else {
       return `'${val}'`;
     }
+  } else if (typeof val == "bigint" || typeof val == "number") {
+    return val;
+  } else if (typeof val == "boolean") {
+    return Number(val);
+  } else if (typeof val == "object") {
+    return `'${JSON.stringify(val)}'`;
+  } else {
+    return `'${val}'`;
   }
 };

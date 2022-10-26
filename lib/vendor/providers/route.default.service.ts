@@ -36,6 +36,9 @@ class RouteDefaultService {
         );
 
         console.log(`[${dateTime()}] ${ip}:${req.socket.remotePort} Closing`);
+
+        clearFormValidationSession();
+        clearFormValuesSession();
       });
 
       next();
@@ -59,11 +62,16 @@ class RouteDefaultService {
     return data;
   }
 
-  _request(req: Request): void {
+  async _request(req: Request): Promise<void> {
     request = {
-      ...req.query,
       ...req.body,
     };
+
+    if (req.method == "POST") {
+      values = {
+        ...req.body,
+      };
+    }
   }
 
   appendToRequest(req: any) {

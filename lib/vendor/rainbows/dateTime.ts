@@ -6,6 +6,10 @@ export const dateTime = (d: any = null) => {
       return null;
     }
 
+    if (!Number.isNaN(Number(d))) {
+      return null;
+    }
+
     date = new Date(d);
   } else {
     date = new Date();

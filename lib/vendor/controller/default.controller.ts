@@ -1,9 +1,13 @@
 import Validator from "./validator";
-import { Request, Response } from "express";
+import { Request } from "express";
 import { Rule } from "./types/validator";
 
 class DefaultController implements Validator {
-  validate: (req: Request, rule: Rule, sentBack?: boolean) => Promise<any>;
+  validate: (
+    req: Request,
+    rule: Rule,
+    sentBack?: boolean
+  ) => Promise<any[] | boolean>;
 }
 
 function applyMixins(derivedCtor: any, baseCtors: any[]) {

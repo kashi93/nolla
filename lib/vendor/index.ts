@@ -5,3 +5,5 @@ import "./global_functions/response";
 import "./global_functions/view";
 import "./global_functions/env";
 import "./global_functions/form_validator";
+import "./global_functions/form_values";
+import "./global_functions/route_list";
