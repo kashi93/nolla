@@ -13,7 +13,6 @@ class DefaultAuth {
       const user = await this.attempt();
       if (user) {
         this.generateSession(user);
-
         return response.redirect(this.redirectTo());
       } else {
         return response.redirect(route("login"));
@@ -70,6 +69,16 @@ class DefaultAuth {
     );
 
     return decoded.user;
+  }
+
+  logout?() {
+    response.cookie("jwt", "", {
+      maxAge: -1,
+      secure: true,
+      httpOnly: true,
+    });
+
+    return response.redirect(route("login"));
   }
 }
 
