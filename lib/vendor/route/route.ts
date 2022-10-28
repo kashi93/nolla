@@ -55,7 +55,10 @@ export default class Route {
             if (cb2.data != null && cb2.code != null) {
               return res.status(cb2.code).json(cb2.data);
             } else if (cb2.view != null && cb2.data != null) {
-              return res.render(cb2.view, cb2.data);
+              return res.render(cb2.view, {
+                layout: false,
+                ...cb2.data,
+              });
             }
           }
 
