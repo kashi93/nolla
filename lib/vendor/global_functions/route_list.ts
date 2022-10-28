@@ -1,13 +1,3 @@
-var routeList: any[];
-var route: (name: string) => any;
-
-export const thisIsAModule = true;
-
-declare global {
-  var routeList: any[];
-  var route: (name: string) => any;
-}
-
 globalThis.routeList = [];
 globalThis.route = (name: string): any => {
   const s: any[] = global.routeList.filter((r) => r.name == name);

@@ -1,13 +1,15 @@
 import { Express } from "express";
 import { dateTime } from "../rainbows/dateTime";
-import { Request } from "express";
+import { Request } from "../../";
 import Validator from "../controller/validator";
 import { Rule } from "../controller/types/validator";
+import RequestDefault from "../route/request.default";
 
-class RouteDefaultService {
+class RouteDefaultService extends RequestDefault {
   boot(app: Express) {
     this.default(app);
     this.log(app);
+    this.catchExpressData(app);
     this.route(app);
   }
 
@@ -15,6 +17,14 @@ class RouteDefaultService {
     const bodyParser = require("body-parser");
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
+  }
+
+  catchExpressData(app: Express) {
+    app.use((req, res, next) => {
+      response = res;
+      this._request(req as any);
+      next();
+    });
   }
 
   log(app: Express) {
@@ -63,9 +73,7 @@ class RouteDefaultService {
   }
 
   async _request(req: Request): Promise<void> {
-    request = {
-      ...req.body,
-    };
+    this.generateRequest(req);
 
     if (req.method == "POST") {
       values = {

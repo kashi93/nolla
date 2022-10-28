@@ -1,17 +1,3 @@
-var errors: any[];
-var message: string | null;
-var errorHas: (field: string) => boolean;
-var clearFormValidationSession: () => void;
-
-export const thisIsAModule = true;
-
-declare global {
-  var errors: any[];
-  var message: string | null;
-  var errorHas: (field: string) => boolean;
-  var clearFormValidationSession: () => void;
-}
-
 globalThis.errors = [];
 globalThis.message = "";
 globalThis.errorHas = (field: string): boolean => {

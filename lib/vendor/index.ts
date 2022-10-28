@@ -7,3 +7,4 @@ import "./global_functions/env";
 import "./global_functions/form_validator";
 import "./global_functions/form_values";
 import "./global_functions/route_list";
+import "./global_functions/app_alias";

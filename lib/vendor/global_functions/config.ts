@@ -1,11 +1,3 @@
-var config: (con: string) => any;
-
-export const thisIsAModule = true;
-
-declare global {
-  var config: (con: string) => any;
-}
-
 globalThis.config = (con: string) => {
   const params = con.split(".");
   const path = require("path");
