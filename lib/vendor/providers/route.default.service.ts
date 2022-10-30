@@ -2,7 +2,7 @@ import { Express } from "express";
 import { dateTime } from "../rainbows/dateTime";
 import { Request } from "../../";
 import Validator from "../controller/validator";
-import { Rule } from "../controller/types/validator";
+import { Rule } from "../../";
 import RequestDefault from "../route/request.default";
 
 class RouteDefaultService extends RequestDefault {

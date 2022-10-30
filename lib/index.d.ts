@@ -11,6 +11,19 @@ interface Request extends ExpressRequest {
 interface Response extends ExpressResponse {}
 interface Next extends ExpressNextFunction {}
 
+export type Rules =
+  | "required"
+  | "email"
+  | "min:?"
+  | `min:${number}`
+  | `confirmation:${string}`
+  | "nullable"
+  | Function;
+
+export interface Rule {
+  [field: string]: Rules[];
+}
+
 export const thisIsAModule = true;
 
 declare global {
@@ -26,7 +39,7 @@ declare global {
   var old: (field: string) => any;
   var clearFormValuesSession: () => void;
   var routeList: any[];
-  var route: (name: string) => any;
+  var route: (name: string, params?: { [key: string]: any }) => any;
   var sleep: (ms: number) => Promise<boolean>;
   var view: (path: string, data?: { [key: string]: any }) => Function;
   var auth: {

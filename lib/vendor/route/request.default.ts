@@ -9,6 +9,11 @@ export default class RequestDefault {
 
   input(field: string) {
     const val = this.body[field];
+    if (val != null) {
+      if (String(val).trim().length < 1) {
+        return null;
+      }
+    }
     return val;
   }
 }

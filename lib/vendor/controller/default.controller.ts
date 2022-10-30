@@ -1,6 +1,6 @@
 import Validator from "./validator";
 import { Request } from "express";
-import { Rule } from "./types/validator";
+import { Rule } from "../../";
 
 class DefaultController implements Validator {
   validate: (

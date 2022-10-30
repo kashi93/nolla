@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
 import { Request } from "express";
-import { Rule } from "./types/validator";
+import { Rule } from "../../";
 const {
   default: validation,
 } = require("../../resources/views/lang/validation");
@@ -19,7 +19,7 @@ export default class Validator {
     if (err.array().length > 0) {
       if (sentBack) {
         try {
-          response.redirect(req.path);
+          response.redirect("back");
           return err.array();
         } catch (error) {
           console.log(error);
@@ -35,12 +35,17 @@ export default class Validator {
   async prepare?(rule: Rule, req: Request): Promise<any[]> {
     const rules: any[] = [];
     for await (const field of Object.getOwnPropertyNames(rule)) {
+      let next = true;
       for await (const r of rule[field]) {
         if (typeof r == "string") {
           const split = r.split(":");
 
           if (split[0].trim().length < 1) {
             continue;
+          }
+
+          if (!next) {
+            break;
           }
 
           switch (split[0]) {
@@ -52,6 +57,9 @@ export default class Validator {
               break;
             case "confirmation":
               rules.push(this.confirmation(req, field, split[1]));
+              break;
+            case "nullable":
+              next = this.nullable(field, req);
               break;
             default:
               rules.push((this as any)[split[0]](field));
@@ -89,6 +97,18 @@ export default class Validator {
       .isEmpty()
       .withMessage(msg)
       .run(req);
+  }
+
+  nullable?(field: string, req: Request): boolean {
+    if (req.body[field] == null) {
+      return false;
+    }
+
+    if (String(req.body[field]).trim().length > 0) {
+      return true;
+    }
+
+    return false;
   }
 
   min?(field: string, length: number) {

@@ -4,6 +4,7 @@ import RouteService from "../../app/services/route.service";
 const RouteDefaultService = require("../providers/route.default.service");
 
 let middlewareList: any = [];
+let prefix: string;
 
 export default class Route {
   app: Express;
@@ -22,8 +23,14 @@ export default class Route {
     argv: [controllerClassPath: string, method: string] | Function
   ) {
     const self = this;
+    let fullUrl = url;
+
+    if (prefix != null) {
+      fullUrl = `/${prefix}${fullUrl}`;
+    }
+
     this.app.get(
-      url,
+      fullUrl,
       ...middlewareList,
       async function (req: Request, res: Response, next: Next) {
         try {
@@ -63,7 +70,11 @@ export default class Route {
           }
 
           try {
-            res.status(200).send(cb.toString());
+            if (cb != null) {
+              res.status(200).send(cb.toString());
+            } else {
+              res.status(200).send("");
+            }
           } catch (error) {}
         } catch (error) {
           next(error);
@@ -71,7 +82,7 @@ export default class Route {
       }
     );
 
-    return this.callback(url, argv);
+    return this.callback(fullUrl, argv);
   }
 
   post(
@@ -79,9 +90,14 @@ export default class Route {
     argv: [controllerClassPath: string, method: string] | Function
   ) {
     const self = this;
+    let fullUrl = url;
+
+    if (prefix != null) {
+      fullUrl = `/${prefix}${fullUrl}`;
+    }
 
     this.app.post(
-      url,
+      fullUrl,
       ...middlewareList,
       async function (req: Request, res: Response, next: Next) {
         try {
@@ -116,7 +132,11 @@ export default class Route {
           }
 
           try {
-            res.send(cb.toString());
+            if (cb != null) {
+              res.status(200).send(cb.toString());
+            } else {
+              res.status(200).send("");
+            }
           } catch (error) {}
         } catch (error) {
           next(error);
@@ -124,13 +144,19 @@ export default class Route {
       }
     );
 
-    return this.callback(url, argv);
+    return this.callback(fullUrl, argv);
   }
 
   async middlewares(arg: Function[], routes: Function): Promise<void> {
     middlewareList = arg;
     await routes();
     middlewareList = [];
+  }
+
+  async prefix(name: string, routes: Function) {
+    prefix = name;
+    await routes();
+    prefix = null;
   }
 
   callback(url: any, argv: any) {
