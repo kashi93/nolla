@@ -8,3 +8,5 @@ import "./global_functions/form_validator";
 import "./global_functions/form_values";
 import "./global_functions/route_list";
 import "./global_functions/app_alias";
+import "./global_functions/storage_path";
+import "./global_functions/public_path";

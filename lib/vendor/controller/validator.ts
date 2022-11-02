@@ -1,6 +1,6 @@
 import { body, validationResult } from "express-validator";
-import { Request } from "express";
-import { Rule } from "../../";
+import { Request, Rule } from "../../";
+import { mimesTypes } from "./mimesTypes";
 const {
   default: validation,
 } = require("../../resources/views/lang/validation");
@@ -50,16 +50,24 @@ export default class Validator {
 
           switch (split[0]) {
             case "required":
-              (await this.required(field, req)).isEmpty();
+              if (req.file(field) == null) {
+                (await this.required(field, req)).isEmpty();
+              }
               break;
             case "min":
-              rules.push(this.min(field, parseInt(split[1])));
+              rules.push(this.min(req, field, parseInt(split[1])));
               break;
             case "confirmation":
               rules.push(this.confirmation(req, field, split[1]));
               break;
             case "nullable":
               next = this.nullable(field, req);
+              break;
+            case "mimes":
+              rules.push(this.mimes(req, field, split[1]));
+              break;
+            case "max":
+              rules.push(this.max(req, field, parseInt(split[1])));
               break;
             default:
               rules.push((this as any)[split[0]](field));
@@ -111,15 +119,39 @@ export default class Validator {
     return false;
   }
 
-  min?(field: string, length: number) {
-    let msg = "Invalid value";
-
-    if (validation.min != null) {
-      msg = validation.min
-        .replace(/:attribute/, field.replace(/_/, " "))
-        .replace(/:min/, length);
+  min?(req: Request, field: string, size: number) {
+    if (Number.isNaN(size)) {
+      return body(field).custom(() => true);
     }
-    return body(field).isLength({ min: length }).withMessage(msg).bail();
+
+    let msg = "Invalid value";
+    const v = validation.min;
+
+    if (req.file(field) != null) {
+      if (v.file != null) {
+        msg = v.file
+          .replace(/:attribute/, field.replace(/_/, " "))
+          .replace(/:min/, size);
+      }
+
+      if (req.file(field) != null) {
+        return body(field).custom(() => {
+          const file = req.file(field);
+
+          if (file.size < size) {
+            return Promise.reject(msg);
+          }
+          return true;
+        });
+      }
+    } else {
+      if (v.string != null) {
+        msg = v.string
+          .replace(/:attribute/, field.replace(/_/, " "))
+          .replace(/:min/, size);
+      }
+      return body(field).isLength({ min: size }).withMessage(msg).bail();
+    }
   }
 
   confirmation?(req: Request, field1: string, field2: string) {
@@ -150,5 +182,77 @@ export default class Validator {
       }
       return true;
     });
+  }
+
+  mimes?(req: Request, field: string, selectedMimes: string) {
+    return body(field).custom(async () => {
+      let msg = "Invalid value";
+
+      if (validation.confirmation != null) {
+        msg = validation.mimes
+          .replace(/:attribute/, field.replace(/_/, " "))
+          .replace(/:values/, selectedMimes);
+      }
+
+      if (req.file(field) != null) {
+        const file = req.file(field),
+          mimetype = file.mimetype;
+        const list: any[] = [];
+
+        for await (const m of selectedMimes.split(",")) {
+          if (mimesTypes[m] != null) {
+            if (!Array.isArray(mimesTypes[m])) {
+              list.push(mimesTypes[m]);
+            } else {
+              for await (const m2 of mimesTypes[m]) {
+                list.push(m2);
+              }
+            }
+          }
+        }
+
+        if (!list.includes(mimetype)) {
+          return Promise.reject(msg);
+        }
+      }
+
+      return true;
+    });
+  }
+
+  max?(req: Request, field: string, size: number) {
+    if (Number.isNaN(size)) {
+      return body(field).custom(() => true);
+    }
+
+    let msg = "Invalid value";
+    const v = validation.max;
+
+    if (v.file != null) {
+      msg = v.file
+        .replace(/:attribute/, field.replace(/_/, " "))
+        .replace(/:max/, size);
+    }
+
+    if (req.file(field) != null) {
+      return body(field).custom(() => {
+        const file = req.file(field);
+
+        if (file.size > size) {
+          return Promise.reject(msg);
+        }
+        return true;
+      });
+    } else {
+      if (v.string != null) {
+        msg = v.string
+          .replace(/:attribute/, field.replace(/_/, " "))
+          .replace(/:max/, size);
+      }
+      return body(field)
+        .isLength({ min: 0, max: size })
+        .withMessage(msg)
+        .bail();
+    }
   }
 }

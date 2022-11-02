@@ -4,8 +4,21 @@ import {
   NextFunction as ExpressNextFunction,
 } from "express";
 
+export interface File {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+  move: (path?: string, name?: string) => Promise<string | null>;
+}
+
 interface Request extends ExpressRequest {
   input: (field: string) => any;
+  file: (field: string) => File | null;
 }
 
 interface Response extends ExpressResponse {}
@@ -18,6 +31,8 @@ export type Rules =
   | `min:${number}`
   | `confirmation:${string}`
   | "nullable"
+  | `mimes:${string}`
+  | `max:${number}`
   | Function;
 
 export interface Rule {
@@ -45,4 +60,6 @@ declare global {
   var auth: {
     user: () => { [key: string]: any } | null;
   };
+  var storage_path: (path?: string) => string;
+  var public_path: (path?: string) => string;
 }
