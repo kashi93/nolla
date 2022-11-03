@@ -71,7 +71,11 @@ export default class Route {
 
           try {
             if (cb != null) {
-              res.status(200).send(cb.toString());
+              if (typeof cb == "object") {
+                res.status(200).send(cb);
+              } else {
+                res.status(200).send(cb.toString());
+              }
             } else {
               res.status(200).send("");
             }
@@ -141,7 +145,11 @@ export default class Route {
 
           try {
             if (cb != null) {
-              res.status(200).send(cb.toString());
+              if (typeof cb == "object") {
+                res.status(200).send(cb);
+              } else {
+                res.status(200).send(cb.toString());
+              }
             } else {
               res.status(200).send("");
             }
