@@ -1,10 +1,10 @@
 import Fetch from "./builder/fetch";
 import Create from "./builder/create";
-import Collection from "./builder/collection";
 
 class Model implements Create, Fetch {
   table: string;
   useTimeStamps: boolean = true;
+  hidden: string[] = [];
 
   create: (params: { [column: string]: any }) => Promise<any>;
   update: (params: { [column: string]: any }) => Promise<boolean>;
@@ -19,9 +19,9 @@ class Model implements Create, Fetch {
     operator: "=" | "!=" | ">" | "<" | ">=" | "<=",
     value: any
   ) => this;
-  first: () => Promise<typeof Collection | null>;
-  get: () => Promise<Array<typeof Collection>>;
-  all: () => Promise<Array<typeof Collection>>;
+  first: () => Promise<any>;
+  get: () => Promise<Array<any>>;
+  all: () => Promise<Array<any>>;
   toSql: () => string;
 }
 

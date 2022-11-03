@@ -1,6 +1,7 @@
 import { Express } from "express";
 import { Request, Response, Next } from "../../";
 import RouteService from "../../app/services/route.service";
+import ResponseJsonSerialize from "./responseJsonSerialize";
 const RouteDefaultService = require("../providers/route.default.service");
 
 let middlewareList: any = [];
@@ -72,7 +73,7 @@ export default class Route {
           try {
             if (cb != null) {
               if (typeof cb == "object") {
-                res.status(200).send(cb);
+                res.status(200).send(await ResponseJsonSerialize.serialize(cb));
               } else {
                 res.status(200).send(cb.toString());
               }
@@ -146,7 +147,7 @@ export default class Route {
           try {
             if (cb != null) {
               if (typeof cb == "object") {
-                res.status(200).send(cb);
+                res.status(200).send(await ResponseJsonSerialize.serialize(cb));
               } else {
                 res.status(200).send(cb.toString());
               }

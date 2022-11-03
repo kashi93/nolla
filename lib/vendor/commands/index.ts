@@ -6,5 +6,6 @@ module.exports = (() => {
   require("./makeModel");
   require("./generateUi");
   require("./makeServer");
+  require("./makeTest");
   yargs.parse();
 })();

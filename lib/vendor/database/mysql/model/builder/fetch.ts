@@ -1,4 +1,4 @@
-import Collection from "./collection";
+import Collection from "./dbCollection";
 import Delete from "./delete";
 import { execute } from "./execute";
 import Update from "./update";
@@ -46,7 +46,7 @@ class Fetch implements Update, Delete {
     return this;
   }
 
-  async first(): Promise<typeof Collection | null> {
+  async first(): Promise<any> {
     const self = this as any;
     const query = `SELECT * FROM ${this.table} ${self.params} LIMIT 1`;
     const d1: any[] = await execute(query);
@@ -56,34 +56,35 @@ class Fetch implements Update, Delete {
       return null;
     }
 
-    return await Collection.make(d1[0]);
+    return await Collection.make(this, d1[0]);
   }
 
-  async get(): Promise<Array<typeof Collection>> {
-    const data: Array<typeof Collection> = [];
+  async get(): Promise<Array<any>> {
+    const data: Array<any> = [];
     const self = this as any;
     const query = `SELECT * FROM ${this.table} ${self.params}`;
     const d1: any[] = await execute(query);
 
     for await (const d of d1) {
-      data.push(await Collection.make(d));
+      data.push(await Collection.make(this, d));
     }
 
     delete self.params;
     return data;
   }
 
-  async all(): Promise<Array<typeof Collection>> {
-    const data: Array<typeof Collection> = [];
+  async all(): Promise<Array<any>> {
+    const data: Array<any> = [];
     const self = this as any;
     const query = `SELECT * FROM ${this.table}`;
     const d1: any[] = await execute(query);
 
     for await (const d of d1) {
-      data.push(await Collection.make(d));
+      data.push(await Collection.make(this, d));
     }
 
     delete self.params;
+
     return data;
   }
 
