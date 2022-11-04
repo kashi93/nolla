@@ -96,18 +96,11 @@ export default class Route {
   ) {
     const self = this;
     let fullUrl = url;
-    const path = require("path");
-    const multer = require("multer");
-    const upload = multer({
-      dest: `${path.dirname(require.main?.filename)}/storage/cache`,
-    });
     const middleware: any[] = middlewareList;
 
     if (prefix != null) {
       fullUrl = `/${prefix}${fullUrl}`;
     }
-
-    middleware.unshift(upload.any());
 
     this.app.post(
       fullUrl,

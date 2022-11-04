@@ -20,8 +20,16 @@ class RouteDefaultService extends RequestDefault {
   }
 
   catchExpressData(app: Express) {
-    app.use((req, res, next) => {
+    const path = require("path");
+    const multer = require("multer");
+    const upload = multer({
+      dest: `${path.dirname(require.main?.filename)}/storage/cache`,
+    });
+
+    app.use(upload.any(), (req, res, next) => {
       response = res;
+      console.log(req.body);
+
       this._request(req as any);
       next();
     });
