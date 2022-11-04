@@ -22,8 +22,10 @@ export default yargs.command({
     }
 
     app.use((err: any, req: any, res: any, next: any) => {
-      storeError(err);
-      res.send(err.stack);
+      try {
+        storeError(err);
+        res.send(err.stack);
+      } catch (error) {}
     });
 
     app.listen(

@@ -28,8 +28,6 @@ class RouteDefaultService extends RequestDefault {
 
     app.use(upload.any(), (req, res, next) => {
       response = res;
-      console.log(req.body);
-
       this._request(req as any);
       next();
     });
