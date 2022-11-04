@@ -20,7 +20,7 @@ export default class Validator {
       if (sentBack) {
         try {
           response.redirect("back");
-          return err.array();
+          return false;
         } catch (error) {
           console.log(error);
         }
