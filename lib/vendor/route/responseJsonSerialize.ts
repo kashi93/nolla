@@ -14,8 +14,21 @@ class ResponseJsonSerialize {
     }
 
     if (data.$_MySql != null) {
-      return await this.mysql(data);
+      delete data.$_MySql;
+      if (data.data != null) {
+        if (Array.isArray(data.data)) {
+          for (let index = 0; index < data.data.length; index++) {
+            data.data[index] = await this.mysql(data.data[index]);
+          }
+        }
+      }
+
+      if (data.$_attributes != null) {
+        return await this.mysql(data);
+      }
     }
+
+    return data;
   }
   async mysql(data: { [key: string]: any }) {
     const keys = Object.getOwnPropertyNames(data.$_attributes);

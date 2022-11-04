@@ -21,6 +21,12 @@ class Model implements Create, Fetch {
   ) => this;
   first: () => Promise<any>;
   get: () => Promise<Array<any>>;
+  paginate: (
+    perPage?: number,
+    columns?: string[],
+    pageName?: string,
+    page?: number
+  ) => Promise<Array<any>>;
   all: () => Promise<Array<any>>;
   toSql: () => string;
 }

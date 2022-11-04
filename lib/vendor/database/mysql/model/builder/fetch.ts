@@ -73,6 +73,57 @@ class Fetch implements Update, Delete {
     return data;
   }
 
+  async paginate(
+    perPage: number = null,
+    columns: string[] = ["*"],
+    pageName: string = "page",
+    page: number = null
+  ): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const self = this as any;
+      perPage = perPage || 10;
+
+      if (request.input("page") != null) {
+        page = request.input("page");
+      }
+
+      let numRows: number;
+      let queryPagination;
+      let numPages: number;
+      const skip = page * perPage;
+      const limit = skip + "," + perPage;
+
+      execute(`SELECT count(*) as numRows FROM ${this.table}`)
+        .then((results) => {
+          numRows = results[0].numRows;
+          numPages = Math.ceil(numRows / perPage);
+        })
+        .then(() =>
+          execute(
+            `SELECT ${columns.join(",")} FROM ${this.table} ${
+              self.params
+            } LIMIT ${limit}`
+          )
+        )
+        .then(async (query) => {
+          const data: Array<any> = [];
+
+          for await (const q of query) {
+            data.push(await Collection.make(this, q));
+          }
+
+          resolve({
+            $_MySql: true,
+            total: numRows,
+            last_page: numPages,
+            data,
+            per_page: perPage,
+            current_page: page,
+          });
+        });
+    });
+  }
+
   async all(): Promise<Array<any>> {
     const data: Array<any> = [];
     const self = this as any;
