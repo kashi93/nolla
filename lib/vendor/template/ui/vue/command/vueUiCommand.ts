@@ -1,6 +1,5 @@
 import fs from "fs";
 import path from "path";
-import chalk from "chalk";
 
 class VueUiCommand {
   async handle() {
@@ -78,6 +77,7 @@ class VueUiCommand {
     const jsFiles = await fs.promises.readdir(
       `${path.dirname(require.main?.filename)}/vendor/template/ui/vue/js`
     );
+
     for await (const js of jsFiles) {
       if (
         !fs
@@ -92,7 +92,9 @@ class VueUiCommand {
           `${path.dirname(
             require.main?.filename
           )}/vendor/template/ui/vue/js/${js}`,
-          `${path.dirname(require.main?.filename)}/resources/js/vue/${js}`
+          `${path.dirname(
+            require.main?.filename
+          )}/resources/js/vue/${js.replace(/.txt/, "")}`
         );
       } else {
         if (
@@ -118,7 +120,7 @@ class VueUiCommand {
             )}/vendor/template/ui/vue/js/${js}/${c}`,
             `${path.dirname(
               require.main?.filename
-            )}/resources/js/vue/${js}/${c}`
+            )}/resources/js/vue/${js}/${c.replace(/.txt/, "")}`
           );
         }
       }

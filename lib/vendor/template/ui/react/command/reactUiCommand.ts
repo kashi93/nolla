@@ -111,7 +111,9 @@ class ReactUiCommand {
         `${path.dirname(
           require.main?.filename
         )}/vendor/template/ui/react/js/${js}`,
-        `${path.dirname(require.main?.filename)}/resources/js/react/${js}`
+        `${path.dirname(
+          require.main?.filename
+        )}/resources/js/react/${js.replace(/.txt/, "")}`
       );
     }
   }
