@@ -39,6 +39,14 @@ export interface Rule {
   [field: string]: Rules[];
 }
 
+export interface Router {
+  name: string;
+  url: string;
+  method: string;
+  argv: [controllerClassPath: string, method: string] | Function;
+  middleware: string[];
+}
+
 export const thisIsAModule = true;
 
 declare global {
@@ -53,7 +61,7 @@ declare global {
   var values: { [key: string]: any };
   var old: (field: string) => any;
   var clearFormValuesSession: () => void;
-  var routeList: any[];
+  var routeList: Router[];
   var route: (name: string, params?: { [key: string]: any }) => any;
   var sleep: (ms: number) => Promise<boolean>;
   var view: (path: string, data?: { [key: string]: any }) => Function;

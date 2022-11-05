@@ -2,7 +2,7 @@
   "compilerOptions": {
     "types": ["node"],
     "module": "commonjs",
-    "target": "ES2022",
+    "target": "ES5",
     "noImplicitAny": true,
     "esModuleInterop": true,
     "sourceMap": false,

@@ -4,7 +4,7 @@ import RouteService from "../../app/services/route.service";
 import ResponseJsonSerialize from "./responseJsonSerialize";
 const RouteDefaultService = require("../providers/route.default.service");
 
-let middlewareList: any = [];
+let middlewareList: string[] = [];
 let prefix: string;
 
 export default class Route {
@@ -23,16 +23,42 @@ export default class Route {
     url: string,
     argv: [controllerClassPath: string, method: string] | Function
   ) {
+    const path = require("path");
     const self = this;
+    const middlewares: any = [];
     let fullUrl = url;
 
     if (prefix != null) {
       fullUrl = `/${prefix}${fullUrl}`;
     }
 
+    for (const m of middlewareList) {
+      if (config("app.routeMiddleware")[m] == null) {
+        throw new Error(
+          `Route middleware ${m} does not exist or does not register`
+        );
+      }
+      const { default: p } = require(`${path.dirname(require.main?.filename)}/${
+        config("app.routeMiddleware")[m]
+      }`);
+      middlewares.push(p);
+    }
+
+    if (
+      routeList.filter((r) => r.url == fullUrl && r.method == "GET").length < 1
+    ) {
+      routeList.push({
+        name: "",
+        url: fullUrl,
+        method: "GET",
+        argv: argv,
+        middleware: middlewares,
+      });
+    }
+
     this.app.get(
       fullUrl,
-      ...middlewareList,
+      ...middlewares,
       async function (req: Request, res: Response, next: Next) {
         try {
           let cb = null;
@@ -87,24 +113,59 @@ export default class Route {
       }
     );
 
-    return this.callback(fullUrl, argv);
+    return {
+      name: (name: string) => {
+        const index = routeList.findIndex(
+          (r) => r.url == fullUrl && r.method == "GET"
+        );
+
+        if (index != -1) {
+          routeList[index].name = name;
+        }
+      },
+    };
   }
 
   post(
     url: string,
     argv: [controllerClassPath: string, method: string] | Function
   ) {
+    const path = require("path");
     const self = this;
+    const middlewares: any = [];
     let fullUrl = url;
-    const middleware: any[] = middlewareList;
 
     if (prefix != null) {
       fullUrl = `/${prefix}${fullUrl}`;
     }
 
+    for (const m of middlewareList) {
+      if (config("app.routeMiddleware")[m] == null) {
+        throw new Error(
+          `Route middleware ${m} does not exist or does not register`
+        );
+      }
+      const { default: p } = require(`${path.dirname(require.main?.filename)}/${
+        config("app.routeMiddleware")[m]
+      }`);
+      middlewares.push(p);
+    }
+
+    if (
+      routeList.filter((r) => r.url == fullUrl && r.method == "POST").length < 1
+    ) {
+      routeList.push({
+        name: "",
+        url: fullUrl,
+        method: "POST",
+        argv: argv,
+        middleware: middlewares,
+      });
+    }
+
     this.app.post(
       fullUrl,
-      ...middleware,
+      ...middlewares,
       async function (req: Request, res: Response, next: Next) {
         try {
           let cb = null;
@@ -154,10 +215,20 @@ export default class Route {
       }
     );
 
-    return this.callback(fullUrl, argv);
+    return {
+      name: (name: string) => {
+        const index = routeList.findIndex(
+          (r) => r.url == fullUrl && r.method == "POST"
+        );
+
+        if (index != -1) {
+          routeList[index].name = name;
+        }
+      },
+    };
   }
 
-  async middlewares(arg: Function[], routes: Function): Promise<void> {
+  async middlewares(arg: string[], routes: Function): Promise<void> {
     middlewareList = arg;
     await routes();
     middlewareList = [];
@@ -167,21 +238,5 @@ export default class Route {
     prefix = name;
     await routes();
     prefix = null;
-  }
-
-  callback(url: any, argv: any) {
-    return {
-      url,
-      argv,
-      name: function (name: string) {
-        if (routeList.filter((r) => r.name == name).length < 1) {
-          routeList.push({
-            name,
-            url: this.url,
-            argv: this.argv,
-          });
-        }
-      },
-    };
   }
 }
