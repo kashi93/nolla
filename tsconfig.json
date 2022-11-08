@@ -2,7 +2,7 @@
   "compilerOptions": {
     "types": ["node"],
     "module": "commonjs",
-    "target": "ES5",
+    "target": "ES2022",
     "noImplicitAny": true,
     "esModuleInterop": true,
     "sourceMap": false,
@@ -13,10 +13,5 @@
     "outDir": "",
     "rootDir": "./lib"
   },
-  "include": [
-    "lib/**/*.ts",
-    "lib/**/*.js",
-    "lib/tests/unit_list.json",
-    "lib/resources/views/**/*"
-  ]
+  "include": ["lib/**/*.ts", "lib/**/*.js", "lib/tests/unit_list.json"]
 }

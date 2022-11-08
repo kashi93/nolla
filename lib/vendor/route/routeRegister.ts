@@ -95,8 +95,6 @@ export default class RouteRegister {
     controller: string | Function,
     middlewareList: string[]
   ) {
-    console.log(middlewareList);
-
     const path = require("path");
     const middlewares: any = [];
 
