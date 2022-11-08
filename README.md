@@ -202,7 +202,6 @@ Route.prefix("admin", () => {
     Route.get("/users", ["user.controller", "index"]).name("user.index");
     // Matches The "/admin/users" URL
 });
-  
 ```
 
 
