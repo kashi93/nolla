@@ -1,9 +1,7 @@
-var ExampleTest = /** @class */ (function () {
-    function ExampleTest() {
-    }
-    ExampleTest.prototype.handler = function () {
-        return "hello nolla";
-    };
-    return ExampleTest;
-}());
+class ExampleTest {
+  handler() {
+    return "hello nolla";
+  }
+}
+
 exports.default = new ExampleTest();
