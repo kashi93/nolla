@@ -137,8 +137,8 @@ The router allows you to register routes that respond to any HTTP verb :
 <br/>
 
 ```
-Route.get(url: string,argv: [controllerClassPath: string method: string] | Function);
-Route.post(url: string,argv: [controllerClassPath: string method: string] | Function);
+Route.get(url: string,argv: [controllerClassPath: string,method: string] | Function);
+Route.post(url: string,argv: [controllerClassPath: string,method: string] | Function);
 ```
 
 ### Required Parameters
