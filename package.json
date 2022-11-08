@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "serve": "nodemon",
+    "serve": "node nolla serve",
     "dev": "webpack --mode=development",
     "watch": "webpack --mode=development --watch",
     "build": "tsc",
