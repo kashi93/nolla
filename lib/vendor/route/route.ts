@@ -1,21 +1,52 @@
-import { Express } from "express";
-import { Request, Response, Next } from "../../";
-import RouteService from "../../app/services/route.service";
-import ResponseJsonSerialize from "./responseJsonSerialize";
-const RouteDefaultService = require("../providers/route.default.service");
+import { routeCollection as c } from "./routeCollection";
+import { v4 as uuidv4 } from "uuid";
 
-let middlewareList: string[] = [];
-let prefix: string;
+class Route {
+  middleware(middleware: string[] | string, routes: Function) {
+    let list = middleware;
 
-export default class Route {
-  app: Express;
-  controllerNameSpace: string;
+    if (typeof middleware == "string") {
+      list = [middleware];
+    }
 
-  constructor(app: Express) {
-    this.app = app;
-    const nameSpace = new RouteService().controllerNameSpace;
-    if (nameSpace != null) {
-      this.controllerNameSpace = nameSpace;
+    for (const l of list) {
+      c.push({
+        uuid: uuidv4(),
+        startControllerNameSpace: false,
+        controllerNameSpace: null,
+        endControllerNameSpace: false,
+        startMiddleware: true,
+        middleware: l,
+        endMiddleware: false,
+        startPrefix: false,
+        prefix: null,
+        endPrefix: false,
+        url: null,
+        argv: null,
+        method: null,
+        name: null,
+      });
+    }
+
+    routes();
+
+    for (const l of list) {
+      c.push({
+        uuid: uuidv4(),
+        startControllerNameSpace: false,
+        controllerNameSpace: null,
+        endControllerNameSpace: false,
+        startMiddleware: false,
+        middleware: null,
+        endMiddleware: true,
+        startPrefix: false,
+        prefix: null,
+        endPrefix: false,
+        url: null,
+        argv: null,
+        method: null,
+        name: null,
+      });
     }
   }
 
@@ -23,104 +54,30 @@ export default class Route {
     url: string,
     argv: [controllerClassPath: string, method: string] | Function
   ) {
-    const path = require("path");
-    const self = this;
-    const middlewares: any = [];
-    let fullUrl = url;
+    const uuid = uuidv4();
 
-    if (prefix != null) {
-      fullUrl = `/${prefix}${fullUrl}`;
-    }
-
-    for (const m of middlewareList) {
-      if (config("app.routeMiddleware")[m] == null) {
-        throw new Error(
-          `Route middleware ${m} does not exist or does not register`
-        );
-      }
-      const { default: p } = require(`${path.dirname(require.main?.filename)}/${
-        config("app.routeMiddleware")[m]
-      }`);
-      middlewares.push(p);
-    }
-
-    if (
-      routeList.filter((r) => r.url == fullUrl && r.method == "GET").length < 1
-    ) {
-      routeList.push({
-        name: "",
-        url: fullUrl,
-        method: "GET",
-        argv: argv,
-        middleware: middlewares,
-      });
-    }
-
-    this.app.get(
-      fullUrl,
-      ...middlewares,
-      async function (req: Request, res: Response, next: Next) {
-        try {
-          let cb = null;
-
-          if (Array.isArray(argv)) {
-            const path = require("path");
-            let controllerPath = `${path.dirname(require.main?.filename)}${
-              argv[0]
-            }`;
-
-            if (self.controllerNameSpace != null) {
-              controllerPath = `${path.dirname(require.main?.filename)}${
-                self.controllerNameSpace
-              }${argv[0]}`;
-            }
-
-            const p = require(controllerPath);
-            const c = new p();
-            cb = await c[argv[1]](
-              ...new RouteDefaultService().params(req, res)
-            );
-          } else {
-            cb = await argv(...new RouteDefaultService().params(req, res));
-          }
-
-          if (typeof cb == "function") {
-            const cb2 = cb();
-            if (cb2.data != null && cb2.code != null) {
-              return res.status(cb2.code).json(cb2.data);
-            } else if (cb2.view != null && cb2.data != null) {
-              return res.render(cb2.view, {
-                layout: false,
-                ...cb2.data,
-              });
-            }
-          }
-
-          try {
-            if (cb != null) {
-              if (typeof cb == "object") {
-                res.status(200).send(await ResponseJsonSerialize.serialize(cb));
-              } else {
-                res.status(200).send(cb.toString());
-              }
-            } else {
-              res.status(200).send("");
-            }
-          } catch (error) {}
-        } catch (error) {
-          next(error);
-        }
-      }
-    );
+    c.push({
+      uuid,
+      startControllerNameSpace: false,
+      controllerNameSpace: null,
+      endControllerNameSpace: false,
+      startMiddleware: false,
+      middleware: null,
+      endMiddleware: false,
+      startPrefix: false,
+      prefix: null,
+      endPrefix: false,
+      url: url,
+      argv: argv,
+      method: "GET",
+      name: null,
+    });
 
     return {
       name: (name: string) => {
-        const index = routeList.findIndex(
-          (r) => r.url == fullUrl && r.method == "GET"
-        );
-
-        if (index != -1) {
-          routeList[index].name = name;
+        const i = c.findIndex((_c) => _c.uuid == uuid);
+        if (i != -1) {
+          c[i].name = name;
         }
       },
     };
@@ -130,113 +87,110 @@ export default class Route {
     url: string,
     argv: [controllerClassPath: string, method: string] | Function
   ) {
-    const path = require("path");
-    const self = this;
-    const middlewares: any = [];
-    let fullUrl = url;
+    const uuid = uuidv4();
 
-    if (prefix != null) {
-      fullUrl = `/${prefix}${fullUrl}`;
-    }
-
-    for (const m of middlewareList) {
-      if (config("app.routeMiddleware")[m] == null) {
-        throw new Error(
-          `Route middleware ${m} does not exist or does not register`
-        );
-      }
-      const { default: p } = require(`${path.dirname(require.main?.filename)}/${
-        config("app.routeMiddleware")[m]
-      }`);
-      middlewares.push(p);
-    }
-
-    if (
-      routeList.filter((r) => r.url == fullUrl && r.method == "POST").length < 1
-    ) {
-      routeList.push({
-        name: "",
-        url: fullUrl,
-        method: "POST",
-        argv: argv,
-        middleware: middlewares,
-      });
-    }
-
-    this.app.post(
-      fullUrl,
-      ...middlewares,
-      async function (req: Request, res: Response, next: Next) {
-        try {
-          let cb = null;
-
-          if (Array.isArray(argv)) {
-            const path = require("path");
-            let controllerPath = `${path.dirname(require.main?.filename)}${
-              argv[0]
-            }`;
-
-            if (self.controllerNameSpace != null) {
-              controllerPath = `${path.dirname(require.main?.filename)}${
-                self.controllerNameSpace
-              }${argv[0]}`;
-            }
-
-            const p = require(controllerPath);
-            const c = new p();
-            cb = await c[argv[1]](
-              ...new RouteDefaultService().params(req, res)
-            );
-          } else {
-            cb = await argv(...new RouteDefaultService().params(req, res));
-          }
-
-          if (typeof cb == "function") {
-            const cb2 = cb();
-            if (cb2.data != null && cb2.code != null) {
-              return res.status(cb2.code).json(cb2.data);
-            }
-          }
-
-          try {
-            if (cb != null) {
-              if (typeof cb == "object") {
-                res.status(200).send(await ResponseJsonSerialize.serialize(cb));
-              } else {
-                res.status(200).send(cb.toString());
-              }
-            } else {
-              res.status(200).send("");
-            }
-          } catch (error) {}
-        } catch (error) {
-          next(error);
-        }
-      }
-    );
+    c.push({
+      uuid,
+      startControllerNameSpace: false,
+      controllerNameSpace: null,
+      endControllerNameSpace: false,
+      startMiddleware: false,
+      middleware: null,
+      endMiddleware: false,
+      startPrefix: false,
+      prefix: null,
+      endPrefix: false,
+      url: url,
+      argv: argv,
+      method: "POST",
+      name: null,
+    });
 
     return {
       name: (name: string) => {
-        const index = routeList.findIndex(
-          (r) => r.url == fullUrl && r.method == "POST"
-        );
-
-        if (index != -1) {
-          routeList[index].name = name;
+        const i = c.findIndex((_c) => _c.uuid == uuid);
+        if (i != -1) {
+          c[i].name = name;
         }
       },
     };
   }
 
-  async middlewares(arg: string[], routes: Function): Promise<void> {
-    middlewareList = arg;
-    await routes();
-    middlewareList = [];
+  prefix(prefix: string, routes: Function) {
+    c.push({
+      uuid: uuidv4(),
+      startControllerNameSpace: false,
+      controllerNameSpace: null,
+      endControllerNameSpace: false,
+      startMiddleware: false,
+      middleware: null,
+      endMiddleware: false,
+      startPrefix: true,
+      prefix: prefix,
+      endPrefix: false,
+      url: null,
+      argv: null,
+      method: null,
+      name: null,
+    });
+
+    routes();
+
+    c.push({
+      uuid: uuidv4(),
+      startControllerNameSpace: false,
+      controllerNameSpace: null,
+      endControllerNameSpace: false,
+      startMiddleware: false,
+      middleware: null,
+      endMiddleware: false,
+      startPrefix: false,
+      prefix: null,
+      endPrefix: true,
+      url: null,
+      argv: null,
+      method: null,
+      name: null,
+    });
   }
 
-  async prefix(name: string, routes: Function) {
-    prefix = name;
-    await routes();
-    prefix = null;
+  controllerNameSpace(controllerNameSpace: string, routes: Function) {
+    c.push({
+      uuid: uuidv4(),
+      startControllerNameSpace: true,
+      controllerNameSpace: controllerNameSpace,
+      endControllerNameSpace: false,
+      startMiddleware: false,
+      middleware: null,
+      endMiddleware: false,
+      startPrefix: false,
+      prefix: null,
+      endPrefix: false,
+      url: null,
+      argv: null,
+      method: null,
+      name: null,
+    });
+
+    routes();
+
+    c.push({
+      uuid: uuidv4(),
+      startControllerNameSpace: false,
+      controllerNameSpace: null,
+      endControllerNameSpace: false,
+      startMiddleware: false,
+      middleware: null,
+      endMiddleware: false,
+      startPrefix: false,
+      prefix: null,
+      endPrefix: false,
+      url: null,
+      argv: null,
+      method: null,
+      name: null,
+    });
   }
 }
+
+export default new Route();

@@ -1,4 +1,5 @@
 import {
+  Express,
   Request as ExpressRequest,
   Response as ExpressResponse,
   NextFunction as ExpressNextFunction,
@@ -43,8 +44,25 @@ export interface Router {
   name: string;
   url: string;
   method: string;
-  argv: [controllerClassPath: string, method: string] | Function;
+  controller: string | Function;
   middleware: string[];
+}
+
+export interface RouteCollection {
+  uuid: string;
+  startControllerNameSpace: boolean;
+  controllerNameSpace: string | null;
+  endControllerNameSpace: boolean;
+  startMiddleware: boolean;
+  middleware: string | null;
+  endMiddleware: boolean;
+  startPrefix: boolean;
+  prefix: string | null;
+  endPrefix: boolean;
+  url: string | null;
+  argv: [controllerClassPath: string, method: string] | Function | null;
+  method: "POST" | "GET" | null;
+  name: string | null;
 }
 
 export const thisIsAModule = true;

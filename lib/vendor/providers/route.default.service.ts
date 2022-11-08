@@ -10,7 +10,6 @@ class RouteDefaultService extends RequestDefault {
     this.default(app);
     this.log(app);
     this.catchExpressData(app);
-    this.route(app);
   }
 
   default(app: Express) {
@@ -61,11 +60,6 @@ class RouteDefaultService extends RequestDefault {
     });
   }
 
-  route(app: Express) {
-    const { default: routes } = require("../../routes/web");
-    routes(app);
-  }
-
   params(req: Request, res: Response): any[] {
     const data: any[] = [];
     const keys = Object.getOwnPropertyNames(req.params);
@@ -89,9 +83,6 @@ class RouteDefaultService extends RequestDefault {
   }
 
   appendToRequest(req: any) {
-    // req.validate = (rule: Rule) => {
-    //   new Validator().validate(req, rule);
-    // };
     return req;
   }
 }
