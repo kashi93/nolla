@@ -8,6 +8,6 @@ export default yargs.command({
   builder: {},
   async handler(argv: any) {
     await copy(`${process.cwd()}/lib/resources`, `${process.cwd()}/resources`);
-    console.log(chalk.green(`Resources successfully copied.`));
+    console.log(chalk.green(`Resources successfully compiled.`));
   },
 });
