@@ -26,11 +26,11 @@ To get started, you can scaffold the project with a clone of a starter project.
 
 
 ```
-$ git clone https://github.com/kashi93/nolla.git project
-$ cd project
-$ cp .env.example .env
-$ npm install
-$ npm run serve / npm run start
+git clone https://github.com/kashi93/nolla.git project
+cd project
+cp .env.example .env
+npm install
+npm run serve / npm run start
 ```
 
 
@@ -39,14 +39,14 @@ Alternatively, to serve project without npm :
 **Production**
 
 ```
-$ npm run build
-$ node build/nolla serve
+npm run build
+node build/nolla serve
 ```
 
 **Development**
 
 ```
-$ ts-node lib/nolla serve
+ts-node lib/nolla serve
 ```
 
 ### Database
@@ -73,10 +73,8 @@ DB_PASSWORD=
 
 Migrate the database.
 
-**TypeScript**
-
 ```
-$ ts-node lib/nolla migrate
+ts-node lib/nolla migrate
 ```
 
 
@@ -91,21 +89,9 @@ In default migrations, the database is users and migrations table.
 
 The routes directory contains all of the route definitions for your application. By default directory : 
 
-
-
-**Common JS**
-
 ```
-$ routes/web.js
+lib/routes/web.ts
 ```
-
-**TypeScript**
-
-```
-$ lib/routes/web.js
-```
-
-
 
 ### Basic Route
 
@@ -143,7 +129,7 @@ Sometimes you will need to capture segments of the URI within your route.
 
 
 ```
-$ Route.get("/user/:id/edit", ["user.controller", "edit"])
+Route.get("/user/:id/edit", ["user.controller", "edit"])
 ```
 
 **Controller**
@@ -208,14 +194,6 @@ Route.controllerNameSpace("/app/controllers/", () =>
 
 You can refer to route providers.
 
-**Common JS**
-
 ```
-$ app/services/route.service.js
-```
-
-**TypeScript**
-
-```
-$ lib/app/services/route.service.js
+lib/app/services/route.service.ts
 ```
