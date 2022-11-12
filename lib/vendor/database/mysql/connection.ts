@@ -1,9 +1,9 @@
 import { createConnection, Connection } from "mysql";
-import "../../global_functions/config";
 
 class mysql {
-  open() {
-    return createConnection(config("database.connections").mysql);
+  async open() {
+    const c = await config("database.connections");
+    return createConnection(c.mysql);
   }
 
   close(con: Connection) {
@@ -12,7 +12,7 @@ class mysql {
 
   async query(query: string) {
     try {
-      const con = this.open();
+      const con = await this.open();
       const r = await this.execute(con, query);
       this.close(con);
       return r;

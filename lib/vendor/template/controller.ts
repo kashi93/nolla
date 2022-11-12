@@ -15,7 +15,7 @@ export const plainController = (controller_name: string) => {
 export const resourceController = (controller_name: string) => {
   return `import { Request, Response } from "express";
 import Controller from "./controller";
-  
+
 export default class ${controller_name} extends Controller {
   /**
    * Display a listing of the resource.
@@ -28,7 +28,7 @@ export default class ${controller_name} extends Controller {
   index({ req, res }: { req: Request; res: Response }): void {
     //
   }
-  
+
   /**
    * Show the form for creating a new resource.
    *
@@ -40,7 +40,7 @@ export default class ${controller_name} extends Controller {
   create({ req, res }: { req: Request; res: Response }): void {
     //
   }
-  
+
   /**
    * Store a newly created resource in storage.
    *
@@ -52,7 +52,7 @@ export default class ${controller_name} extends Controller {
   store({ req, res }: { req: Request; res: Response }): void {
     //
   }
-  
+
   /**
    * Display the specified resource.
    *
@@ -65,7 +65,7 @@ export default class ${controller_name} extends Controller {
   show({ id, req, res }: { id: Number; req: Request; res: Response }): void {
     //
   }
-  
+
   /**
    * Show the form for editing the specified resource.
    *
@@ -78,7 +78,7 @@ export default class ${controller_name} extends Controller {
   edit({ id, req, res }: { id: Number; req: Request; res: Response }): void {
     //
   }
-  
+
   /**
    * Update the specified resource in storage.
    *
@@ -91,7 +91,7 @@ export default class ${controller_name} extends Controller {
   update({ id, req, res }: { id: Number; req: Request; res: Response }): void {
     //
   }
-  
+
   /**
    * Update the specified resource in storage.
    *

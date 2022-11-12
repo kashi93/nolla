@@ -1,3 +1,4 @@
+import {} from "../../";
 globalThis.errors = [];
 globalThis.message = "";
 globalThis.errorHas = (field: string): boolean => {

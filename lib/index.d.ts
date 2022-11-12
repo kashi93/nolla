@@ -1,5 +1,4 @@
 import {
-  Express,
   Request as ExpressRequest,
   Response as ExpressResponse,
   NextFunction as ExpressNextFunction,
@@ -14,12 +13,12 @@ export interface File {
   filename: string;
   path: string;
   size: number;
-  move: (path?: string, name?: string) => Promise<string | null>;
+  move: (publicPath?: string, name?: string) => Promise<string | null>;
 }
 
-interface Request extends ExpressRequest {
-  input: (field: string) => any;
-  file: (field: string) => File | null;
+export interface Request extends ExpressRequest {
+  input?: (field: string) => any;
+  $file?: (field: string) => File;
 }
 
 interface Response extends ExpressResponse {}
@@ -70,7 +69,7 @@ export const thisIsAModule = true;
 declare global {
   var request: Request;
   var response: Response;
-  var config: (con: string) => any;
+  var config: (con: string) => Promise<any>;
   var env: (con: string) => any;
   var errors: any[];
   var message: string | null;

@@ -1,3 +1,5 @@
+import {} from "../../";
+
 globalThis.routeList = [];
 globalThis.route = (name: string, params: { [key: string]: any } = {}): any => {
   const s: any[] = global.routeList.filter((r) => r.name == name);

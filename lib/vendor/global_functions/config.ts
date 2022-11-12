@@ -1,9 +1,11 @@
-globalThis.config = (con: string) => {
+import {} from "../../";
+
+globalThis.config = async (con: string) => {
   const params = con.split(".");
   const path = require("path");
-  const { default: c } = require(`${path.dirname(
-    require.main?.filename
-  )}/config/${params[0]}`);
+  const { default: c } = await import(
+    `${path.dirname(require.main?.filename)}/config/${params[0]}`
+  );
 
   if (params.length == 1) {
     return c;

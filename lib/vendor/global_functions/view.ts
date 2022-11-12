@@ -1,3 +1,5 @@
+import {} from "../../";
+
 globalThis.view = (
   path: string,
   data: { [key: string]: any } = {}

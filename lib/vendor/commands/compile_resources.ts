@@ -7,7 +7,10 @@ export default yargs.command({
   describe: "compile all lib/resources/views/**/* to resources/views/**/*",
   builder: {},
   async handler(argv: any) {
-    await copy(`${process.cwd()}/lib/resources`, `${process.cwd()}/resources`);
+    await copy(
+      `${process.cwd()}/lib/resources`,
+      `${process.cwd()}/build/resources`
+    );
     console.log(chalk.green(`Resources successfully compiled.`));
   },
 });

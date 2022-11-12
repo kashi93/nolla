@@ -59,8 +59,8 @@ class Fetch implements Update, Delete {
     return await Collection.make(this, d1[0]);
   }
 
-  async get(): Promise<Array<any>> {
-    const data: Array<any> = [];
+  async get(): Promise<any[]> {
+    const data: any[] = [];
     const self = this as any;
     const query = `SELECT * FROM ${this.table} ${self.params}`;
     const d1: any[] = await execute(query);
@@ -106,7 +106,7 @@ class Fetch implements Update, Delete {
           )
         )
         .then(async (query) => {
-          const data: Array<any> = [];
+          const data: any[] = [];
 
           for await (const q of query) {
             data.push(await Collection.make(this, q));
@@ -124,8 +124,8 @@ class Fetch implements Update, Delete {
     });
   }
 
-  async all(): Promise<Array<any>> {
-    const data: Array<any> = [];
+  async all(): Promise<any[]> {
+    const data: any[] = [];
     const self = this as any;
     const query = `SELECT * FROM ${this.table}`;
     const d1: any[] = await execute(query);

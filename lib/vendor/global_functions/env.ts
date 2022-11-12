@@ -1,3 +1,4 @@
+import {} from "../../";
 globalThis.env = (con: string): any => {
   try {
     require("dotenv").config();

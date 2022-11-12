@@ -1,3 +1,5 @@
+import {} from "../../";
+
 globalThis.values = {};
 globalThis.old = (field: string): any => {
   return global.values[field] || "";

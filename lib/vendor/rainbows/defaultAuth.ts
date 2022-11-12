@@ -1,7 +1,7 @@
-const { default: userModel } = require("../../app/models/user.model");
+import { default as userModel } from "../../app/models/user.model";
 import Validator from "../controller/validator";
 import hash from "./hash";
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 class DefaultAuth {
   index?() {
@@ -35,7 +35,11 @@ class DefaultAuth {
       .where("email", "=", request.input("email"))
       .first();
 
-    if (!(await hash.verify(request.input("password"), user.password || ""))) {
+    if (user == null) {
+      return false;
+    }
+
+    if (!(await hash.verify(request.input("password"), user.password))) {
       return false;
     }
 
@@ -63,7 +67,7 @@ class DefaultAuth {
       return null;
     }
 
-    const decoded = jwt.verify(
+    const decoded: any = jwt.verify(
       request.cookies.jwt || null,
       process.env.APP_KEY
     );
@@ -82,4 +86,4 @@ class DefaultAuth {
   }
 }
 
-module.exports = DefaultAuth;
+export = DefaultAuth;

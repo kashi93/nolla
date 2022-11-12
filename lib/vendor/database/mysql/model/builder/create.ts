@@ -29,9 +29,9 @@ export default class Create {
   }
 
   private async createTimeStamp?(current_params: {
-    columns: Array<any>;
-    data: Array<any>;
-  }): Promise<{ columns: Array<any>; data: Array<any> }> {
+    columns: any[];
+    data: any[];
+  }): Promise<{ columns: any[]; data: any[] }> {
     if (this.useTimeStamps) {
       if (this.created_at == null) {
         current_params.columns.push("created_at");
@@ -54,10 +54,10 @@ export default class Create {
 
   private async objToParam1?(
     obj: any
-  ): Promise<{ columns: Array<any>; data: Array<any> }> {
-    const columns: Array<any> = [];
-    const data: Array<any> = [];
-    const keys: Array<any> = Object.getOwnPropertyNames(obj);
+  ): Promise<{ columns: any[]; data: any[] }> {
+    const columns: any[] = [];
+    const data: any[] = [];
+    const keys: any[] = Object.getOwnPropertyNames(obj);
 
     for await (const key of keys) {
       if (key == "created_at") {

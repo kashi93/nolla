@@ -10,7 +10,7 @@
     "allowJs": true,
     "noLib": false,
     "resolveJsonModule": true,
-    "outDir": "",
+    "outDir": "./build",
     "rootDir": "./lib"
   },
   "include": ["lib/**/*.ts", "lib/**/*.js", "lib/tests/unit_list.json"]

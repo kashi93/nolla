@@ -6,7 +6,7 @@ export default class RequestDefault {
   generateRequest(req: Request): void {
     request = req;
     req.input = this.input;
-    req.file = this.file;
+    req.$file = this.file;
   }
 
   input(field: string) {
@@ -43,8 +43,9 @@ export default class RequestDefault {
             if (name != null) {
               fileName = name;
             }
+            console.log(dir);
 
-            fileName + `.${file_ext}`;
+            fileName = fileName + `.${file_ext}`;
 
             await fs.promises.mkdir(dir, {
               recursive: true,

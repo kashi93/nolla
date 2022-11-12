@@ -50,7 +50,7 @@ export default class Validator {
 
           switch (split[0]) {
             case "required":
-              if (req.file(field) == null) {
+              if (req.$file(field) == null) {
                 (await this.required(field, req)).isEmpty();
               }
               break;
@@ -127,16 +127,16 @@ export default class Validator {
     let msg = "Invalid value";
     const v = validation.min;
 
-    if (req.file(field) != null) {
+    if (req.$file(field) != null) {
       if (v.file != null) {
         msg = v.file
           .replace(/:attribute/, field.replace(/_/, " "))
           .replace(/:min/, size);
       }
 
-      if (req.file(field) != null) {
+      if (req.$file(field) != null) {
         return body(field).custom(() => {
-          const file = req.file(field);
+          const file = req.$file(field);
 
           if (file.size < size) {
             return Promise.reject(msg);
@@ -194,8 +194,8 @@ export default class Validator {
           .replace(/:values/, selectedMimes);
       }
 
-      if (req.file(field) != null) {
-        const file = req.file(field),
+      if (req.$file(field) != null) {
+        const file = req.$file(field),
           mimetype = file.mimetype;
         const list: any[] = [];
 
@@ -234,9 +234,9 @@ export default class Validator {
         .replace(/:max/, size);
     }
 
-    if (req.file(field) != null) {
+    if (req.$file(field) != null) {
       return body(field).custom(() => {
-        const file = req.file(field);
+        const file = req.$file(field);
 
         if (file.size > size) {
           return Promise.reject(msg);

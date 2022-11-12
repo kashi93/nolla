@@ -1,1 +1,0 @@
-globalThis.response = null;

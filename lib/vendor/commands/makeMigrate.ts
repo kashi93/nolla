@@ -17,7 +17,7 @@ export default yargs.command({
     },
   },
   async handler(argv) {
-    if (config("database.default") == "mysql") {
+    if ((await config("database.default")) == "mysql") {
       const path = require("path");
 
       if (!(await checkMysqlTableExist("migrations"))) {
@@ -35,7 +35,7 @@ export default yargs.command({
         Table.resetParams();
       }
 
-      let p = `${path.dirname(require.main?.filename)}/migrations/`;
+      const p = `${path.dirname(require.main?.filename)}/migrations/`;
       const migrations = await fs.promises.readdir(p);
       for await (const migrate of migrations) {
         const { default: mysql } = require(`../database/mysql/connection`);

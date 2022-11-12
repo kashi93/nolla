@@ -22,7 +22,7 @@ export default yargs.command({
   },
   async handler(argv) {
     let p = "app/controllers/";
-    const dir: Array<any> = String(argv.name).split("/");
+    const dir: any[] = String(argv.name).split("/");
     const n = dir.pop();
     let c: any = null;
 

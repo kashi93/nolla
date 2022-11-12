@@ -1,5 +1,5 @@
 let col: Readonly<String> = "";
-export let params: Array<string> = [];
+export let params: string[] = [];
 
 class PrivateMethod {
   nullable() {

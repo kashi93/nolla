@@ -1,9 +1,8 @@
-import { Express } from "express";
+import { Express, Response } from "express";
 import { dateTime } from "../rainbows/dateTime";
 import { Request } from "../../";
-import Validator from "../controller/validator";
-import { Rule } from "../../";
 import RequestDefault from "../route/request.default";
+import multer from "multer";
 
 class RouteDefaultService extends RequestDefault {
   boot(app: Express) {
@@ -19,10 +18,8 @@ class RouteDefaultService extends RequestDefault {
   }
 
   catchExpressData(app: Express) {
-    const path = require("path");
-    const multer = require("multer");
     const upload = multer({
-      dest: `${path.dirname(require.main?.filename)}/storage/cache`,
+      dest: `${process.cwd()}/storage/cache`,
     });
 
     app.use(upload.any(), (req, res, next) => {
@@ -87,4 +84,4 @@ class RouteDefaultService extends RequestDefault {
   }
 }
 
-module.exports = RouteDefaultService;
+export = RouteDefaultService;

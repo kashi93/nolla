@@ -6,4 +6,4 @@ class AppDefaultService {
   }
 }
 
-module.exports = AppDefaultService;
+export = AppDefaultService;

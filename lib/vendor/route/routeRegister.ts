@@ -1,14 +1,13 @@
 import { routeCollection } from "./routeCollection";
-import { Express } from "express";
-import { Request, Response, Next } from "../../";
+import { Express, Request, Response, NextFunction } from "express";
 import ResponseJsonSerialize from "./responseJsonSerialize";
-const RouteDefaultService = require("../providers/route.default.service");
+import RouteDefaultService from "../providers/route.default.service";
 
 export default class RouteRegister {
   middlewares: string[] = [];
   prefixs: string[] = [];
   controllerNamespaces: string[] = [];
-  initializations: Array<(app: Express) => void> = [];
+  initializations: ((app: Express) => void)[] = [];
 
   async register() {
     for await (const route of routeCollection) {
@@ -89,7 +88,7 @@ export default class RouteRegister {
     }
   }
 
-  get(
+  async get(
     app: Express,
     url: string,
     controller: string | Function,
@@ -98,22 +97,24 @@ export default class RouteRegister {
     const path = require("path");
     const middlewares: any = [];
 
-    for (const m of middlewareList) {
-      if (config("app.routeMiddleware")[m] == null) {
+    for await (const m of middlewareList) {
+      const _m = (await config("app.routeMiddleware")) as any;
+
+      if (_m[m] == null) {
         throw new Error(
           `Route middleware ${m} does not exist or does not register`
         );
       }
-      const { default: p } = require(`${path.dirname(require.main?.filename)}/${
-        config("app.routeMiddleware")[m]
-      }`);
+      const { default: p } = await import(
+        `${path.dirname(require.main?.filename)}/${_m[m]}`
+      );
       middlewares.push(p);
     }
 
     app.get(
       url,
       ...middlewares,
-      async function (req: Request, res: Response, next: Next) {
+      async function (req: Request, res: Response, next: NextFunction) {
         try {
           let cb = null;
           if (typeof controller == "string") {
@@ -159,7 +160,7 @@ export default class RouteRegister {
     );
   }
 
-  post(
+  async post(
     app: Express,
     url: string,
     controller: string | Function,
@@ -169,21 +170,23 @@ export default class RouteRegister {
     const middlewares: any = [];
 
     for (const m of middlewareList) {
-      if (config("app.routeMiddleware")[m] == null) {
+      const _m = (await config("app.routeMiddleware")) as any;
+
+      if (_m[m] == null) {
         throw new Error(
           `Route middleware ${m} does not exist or does not register`
         );
       }
-      const { default: p } = require(`${path.dirname(require.main?.filename)}/${
-        config("app.routeMiddleware")[m]
-      }`);
+      const { default: p } = await import(
+        `${path.dirname(require.main?.filename)}/${_m[m]}`
+      );
       middlewares.push(p);
     }
 
     app.post(
       url,
       ...middlewares,
-      async function (req: Request, res: Response, next: Next) {
+      async function (req: Request, res: Response, next: NextFunction) {
         try {
           let cb = null;
           if (typeof controller == "string") {

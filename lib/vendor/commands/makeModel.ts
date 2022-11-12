@@ -21,7 +21,7 @@ export default yargs.command({
   },
   async handler(argv) {
     const path = require("path");
-    let p = `${path.dirname(require.main?.filename)}/models/`;
+    const p = `${path.dirname(require.main?.filename)}/models/`;
     let m = null;
 
     if (

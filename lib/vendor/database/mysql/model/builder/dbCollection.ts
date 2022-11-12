@@ -26,8 +26,8 @@ class DbCollection {
 
   proxyHandler = {
     get(target: any, name: any, receiver: any) {
-      if (Reflect.has(target["$_attributes"], name)) {
-        let rv = Reflect.get(target["$_attributes"], name, receiver);
+      if (Reflect.has(target.$_attributes, name)) {
+        const rv = Reflect.get(target.$_attributes, name, receiver);
         return rv;
       }
 
