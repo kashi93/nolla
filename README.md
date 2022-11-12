@@ -20,32 +20,30 @@
 
 ### Scaffold
 
-<br />
+
 
 To get started, you can scaffold the project with a clone of a starter project.
 
-<br />
 
 ```
 $ git clone https://github.com/kashi93/nolla.git project
 $ cd project
 $ cp .env.example .env
 $ npm install
-$ npm run serve
+$ npm run serve / npm run start
 ```
 
-<br />
 
 Alternatively, to serve project without npm : 
-<br />
 
-**Common JS**
+**Production**
 
 ```
-$ node nolla serve
+$ npm run build
+$ node build/nolla serve
 ```
 
-**TypeScript**
+**Development**
 
 ```
 $ ts-node lib/nolla serve
@@ -53,15 +51,14 @@ $ ts-node lib/nolla serve
 
 ### Database
 
-<br/>
+
 
 Create an empty mysql database for your project. In our example we created a database called “nolla”. Just create an empty database here, the exact steps will depend on your system setup.
 
-<br/>
+
 
 Sync your created database with our project in your .env file for the database part.
 
-<br/>
 
 ```
 DB_CONNECTION=mysql
@@ -72,15 +69,9 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-<br/>
+
 
 Migrate the database.
-
-**Common JS**
-
-```
-$ node nolla migrate
-```
 
 **TypeScript**
 
@@ -88,7 +79,7 @@ $ node nolla migrate
 $ ts-node lib/nolla migrate
 ```
 
-<br/>
+
 
 In default migrations, the database is users and migrations table.
 
@@ -96,11 +87,11 @@ In default migrations, the database is users and migrations table.
 
 ## Routing
 
-<br/>
+
 
 The routes directory contains all of the route definitions for your application. By default directory : 
 
-<br/>
+
 
 **Common JS**
 
@@ -114,11 +105,11 @@ $ routes/web.js
 $ lib/routes/web.js
 ```
 
-<br/>
+
 
 ### Basic Route
 
-<br/>
+
 
 ```
 const Route = require("../vendor/route/route").default;
@@ -130,11 +121,11 @@ Route.get("/", function () {
 
 ### Available Router Methods
 
-<br/>
+
 
 The router allows you to register routes that respond to any HTTP verb :
 
-<br/>
+
 
 ```
 Route.get(url: string,argv: [controllerClassPath: string,method: string] | Function);
@@ -145,11 +136,11 @@ Route.post(url: string,argv: [controllerClassPath: string,method: string] | Func
 
 Sometimes you will need to capture segments of the URI within your route.
 
-<br/>
+
 
 **Route**
 
-<br/>
+
 
 ```
 $ Route.get("/user/:id/edit", ["user.controller", "edit"])
@@ -157,7 +148,7 @@ $ Route.get("/user/:id/edit", ["user.controller", "edit"])
 
 **Controller**
 
-<br/>
+
 
 ```
 class UserController extends Controller {
@@ -173,7 +164,7 @@ module.exports = UserController;
 
 Named routes allow the convenient generation of URLs or redirects for specific routes. You may specify a name for a route by chaining the name method onto the route definition:
 
-<br/>
+
 
 ```
 $ Route.get("/", ["user.controller", "index"]).name("user.index");
@@ -183,7 +174,7 @@ $ Route.get("/", ["user.controller", "index"]).name("user.index");
 
 To assign middleware to all or specific routes.
 
-<br/>
+
 
 ```
 Route.middleware("auth", () => {
@@ -195,7 +186,7 @@ Route.middleware("auth", () => {
 
 The prefix method may be used to prefix each route in the group with a given URI.
 
-<br/>
+
 
 ```
 Route.prefix("admin", () => {
