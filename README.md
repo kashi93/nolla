@@ -13,7 +13,10 @@
     - [Middleware](#middleware)
     - [Route Prefixes](#route-prefixes)
     - [Controller Namespace](#controller-namespace)
-
+  - [Middleware](#middleware-1)
+    - [Defining Middleware](#defining-middleware)
+    - [Registering Middleware](#registering-middleware)
+    - [Assigning Middleware To Routes](#assigning-middleware-to-routes)
 
 
 # Installation
@@ -189,4 +192,53 @@ You can refer to route providers.
 
 ```
 lib/app/services/route.service.ts
+```
+
+## Middleware
+
+### Defining Middleware
+
+Default directory for middleware is lib/app/middlewares.For example we create  lib/app/middlewares/auth.middleware.ts
+
+```
+import { Request, Response, Next } from "../../";
+
+export = (req: Request, res: Response, next: Next) => {
+  if (auth.user() == null) {
+    /*
+     * redirect to router
+     */
+    return response.redirect(route("login"));
+
+    /*
+     * redirect using express response
+     */
+    // return res.status(403).json({
+    //   status: "Error",
+    //   message: "Unauthenticated",
+    //   data: {},
+    // });
+  }
+  next();
+};
+```
+
+### Registering Middleware
+
+To register middleware for the HTTP request to your application, list the middleware in lib/config/app.ts
+
+```
+{
+    ...,
+    routeMiddleware: {
+        web: "app/middlewares/web.middleware",
+        auth: "app/middlewares/auth.middleware",
+    },
+}
+```
+
+### Assigning Middleware To Routes
+
+```
+Route.middleware(middleware: string[] | string, routes: Function);
 ```
