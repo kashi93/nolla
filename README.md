@@ -17,6 +17,9 @@
     - [Defining Middleware](#defining-middleware)
     - [Registering Middleware](#registering-middleware)
     - [Assigning Middleware To Routes](#assigning-middleware-to-routes)
+  - [Controllers](#controllers)
+    - [Basic Controller](#basic-controller)
+    - [Params Controller](#params-controller)
 
 
 # Installation
@@ -154,7 +157,7 @@ export = UserController;
 Named routes allow the convenient generation of URLs or redirects for specific routes. You may specify a name for a route by chaining the name method onto the route definition:
 
 ```
-$ Route.get("/", ["user.controller", "index"]).name("user.index");
+Route.get("/", ["user.controller", "index"]).name("user.index");
 ```
 
 ### Middleware
@@ -241,4 +244,60 @@ To register middleware for the HTTP request to your application, list the middle
 
 ```
 Route.middleware(middleware: string[] | string, routes: Function);
+```
+
+## Controllers
+
+By default, controllers are stored in the lib/app/controllers/example.controller.ts directory.
+
+### Basic Controller
+
+```
+import Controller from "./controller";
+
+class UserController extends Controller {
+  create() {
+    return view("nolla/pages/user/user_create_form", {
+      layout: "nolla/templates/app",
+    });
+  }
+}
+
+export = UserController;
+```
+
+Assigning controller To Routes
+
+```
+Route.get(url: string,argv: [controllerClassPath: string, method: string] |Function)
+```
+
+### Params Controller
+
+```
+import Controller from "./controller";
+
+class UserController extends Controller {
+ async edit(id: string) {
+    const user = await userModel.where("id", "=", id).first();
+    return view("nolla/pages/user/user_edit_form", {
+      layout: "nolla/templates/app",
+      user,
+    });
+  }
+}
+
+export = UserController;
+```
+
+By default routes return to controller.
+
+```
+() => arg...,req,res
+```
+
+Assigning controller To Routes
+
+```
+Route.get("/user/:id/edit", ["user.controller", "edit"])
 ```
