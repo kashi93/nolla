@@ -24,6 +24,10 @@
     - [Retrieving An Input Value](#retrieving-an-input-value)
     - [Retrieving An Input File](#retrieving-an-input-file)
     - [Old Input](#old-input)
+  - [Responses](#responses)
+    - [Basic Response](#basic-response)
+    - [View response](#view-response)
+    - [Override nolla response](#override-nolla-response)
 
 
 # Installation
@@ -348,5 +352,53 @@ By default we keep input from one request during the next request.
 
 ```
 <input type="text" class="form-control" name="name" value="<%= old("name")  %>" />
+```
+
+## Responses
+
+Nolla response is extended from the default express response.
+
+### Basic Response
+
+```
+Route.get("/", function () {
+  return "Welcome to nolla";
+});
+```
+
+```
+Route.get("/", function () {
+  return [1,2,3];
+});
+```
+
+```
+Route.get("/", function () {
+  return {
+    name:"nolla",
+    active:true
+  };
+});
+```
+
+### View response
+
+```
+Route.get("/", function () {
+  return view("nolla/pages/user/user_create_form");
+});
+```
+
+### Override nolla response
+
+```
+Route.get("/", function (req,res) {
+    return res.status(200).json({
+      user:{
+        name:"nolla",
+        active:true
+      }
+    });
+});
 ```
 
