@@ -4,4 +4,4 @@ class ExampleController extends Controller {
   //
 }
 
-module.exports = ExampleController;
+export = ExampleController;
