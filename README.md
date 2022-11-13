@@ -98,7 +98,7 @@ lib/routes/web.ts
 
 
 ```
-const Route = require("../vendor/route/route").default;
+import { default as Route } from "../vendor/route/route";
 
 Route.get("/", function () {
   return view("welcome");
@@ -143,14 +143,12 @@ class UserController extends Controller {
     }
 }
 
-module.exports = UserController;
+export = UserController;
 ```
 
 ### Named Routes
 
 Named routes allow the convenient generation of URLs or redirects for specific routes. You may specify a name for a route by chaining the name method onto the route definition:
-
-
 
 ```
 $ Route.get("/", ["user.controller", "index"]).name("user.index");
@@ -159,8 +157,6 @@ $ Route.get("/", ["user.controller", "index"]).name("user.index");
 ### Middleware
 
 To assign middleware to all or specific routes.
-
-
 
 ```
 Route.middleware("auth", () => {
@@ -172,15 +168,12 @@ Route.middleware("auth", () => {
 
 The prefix method may be used to prefix each route in the group with a given URI.
 
-
-
 ```
 Route.prefix("admin", () => {
     Route.get("/users", ["user.controller", "index"]).name("user.index");
     // Matches The "/admin/users" URL
 });
 ```
-
 
 ### Controller Namespace
 
