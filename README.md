@@ -20,6 +20,10 @@
   - [Controllers](#controllers)
     - [Basic Controller](#basic-controller)
     - [Params Controller](#params-controller)
+  - [Requests](#requests)
+    - [Retrieving An Input Value](#retrieving-an-input-value)
+    - [Retrieving An Input File](#retrieving-an-input-file)
+    - [Old Input](#old-input)
 
 
 # Installation
@@ -301,3 +305,48 @@ Assigning controller To Routes
 ```
 Route.get("/user/:id/edit", ["user.controller", "edit"])
 ```
+
+## Requests
+
+Nolla request is extended from the default express request.
+
+### Retrieving An Input Value
+
+```
+req.body || req.query = input(field:string) => any
+```
+
+```
+const name = request.input("name");
+```
+
+### Retrieving An Input File
+
+```
+File {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  destination: string;
+  filename: string;
+  path: string;
+  size: number;
+  move: (publicPath?: string, name?: string) => Promise<string | null>;
+}
+```
+
+```
+if (request.$file("test") != null) {
+    await request.$file("test").move("images");
+}
+```
+
+### Old Input
+
+By default we keep input from one request during the next request.
+
+```
+<input type="text" class="form-control" name="name" value="<%= old("name")  %>" />
+```
+
