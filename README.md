@@ -28,6 +28,21 @@
     - [Basic Response](#basic-response)
     - [View response](#view-response)
     - [Override nolla response](#override-nolla-response)
+  - [Views](#views)
+    - [Rendering Views](#rendering-views)
+    - [Passing Data To Views](#passing-data-to-views)
+  - [Validation](#validation)
+    - [Writing The Validation Logic](#writing-the-validation-logic)
+    - [Displaying The Validation Errors](#displaying-the-validation-errors)
+    - [Available Validation Rules](#available-validation-rules)
+      - [Required](#required)
+      - [Email](#email)
+      - [Minimum](#minimum)
+      - [Maximum](#maximum)
+      - [Confirmation](#confirmation)
+      - [Mimes](#mimes)
+      - [Custom](#custom)
+      - [Optional](#optional)
 
 
 # Installation
@@ -402,3 +417,166 @@ Route.get("/", function (req,res) {
 });
 ```
 
+## Views
+
+Nolla views using the ejs package and is stored in the lib/resources/views directory. You can refer to https://ejs.co/
+
+### Rendering Views
+
+```
+view: (path: string, data?: { [key: string]: any }) => void
+```
+
+```
+import { Request } from "../../";
+import { default as hash } from "../../vendor/rainbows/hash";
+import { default as userModel } from "../models/user.model";
+import Controller from "./controller";
+
+class UserController extends Controller {
+  create() {
+    return view("nolla/pages/user/user_create_form");
+  }
+}
+```
+
+### Passing Data To Views
+
+```
+import { default as userModel } from "../models/user.model";
+import Controller from "./controller";
+
+class UserController extends Controller {
+  async edit(id: string) {
+    const user = await userModel.where("id", "=", id).first();
+    return view("nolla/pages/user/user_edit_form", {
+      user,
+    });
+  }
+}
+```
+
+## Validation
+
+Nolla validation is extended from express-validator package.
+
+### Writing The Validation Logic
+
+```
+validate(req: Request,rule: {[field: string]: Rules[]},sentBack: boolean = true) => Promise<any[] | boolean>;
+```
+
+```
+import { Request } from "../../";
+import { default as userModel } from "../models/user.model";
+import Controller from "./controller";
+
+class UserController extends Controller {
+   async store(req: Request) {
+    const validate = await this.validate(req, {
+      name: ["required"],
+      email: [
+        "required",
+        "email",
+        async function (attr: string, val: any, fail: Function) {
+          if (
+            (await userModel
+              .where("email", "=", request.input("email"))
+              .first()) != null
+          ) {
+            fail("The email has already been taken.");
+          }
+        },
+      ],
+      password: ["required", "min:5", "max:8"],
+      password_confirmation: ["required", "confirmation:password"],
+    });
+
+    if (validate) {
+      // The validation is valid...
+    }
+  }
+}
+```
+
+### Displaying The Validation Errors
+
+```
+<div class="col-6">
+  <div class="form-group">
+    <label>Name</label>
+    <input type="text" class="form-control" name="name" value="<%= old("name")  %>" />
+    <% if (errorHas('name')) { %>
+       <div class="text-danger m-1"><%=message%></div>
+    <% } %>
+  </div>
+</div>
+```
+
+### Available Validation Rules
+
+#### Required
+
+```
+name: ["required"]
+```
+
+#### Email
+
+```
+email: ["email"]
+```
+
+#### Minimum
+
+```
+field:`min:${number}`
+```
+```
+password: ["min:5"]
+```
+
+#### Maximum
+
+```
+field:`max:${number}`
+```
+```
+password: ["max:8"]
+```
+
+#### Confirmation
+
+```
+password: ["required", "min:5", "max:8"],
+password_confirmation: ["required", "confirmation:password"]
+```
+
+#### Mimes
+
+```
+image: ["mimes:jpeg,svg"]
+```
+
+#### Custom
+
+```
+field:Function
+```
+
+```
+email: [
+  ...,
+  async function (attr: string, val: any, fail: Function) {
+    if ((await userModel.where("email", "=", request.input("email")).first()) != null) {
+      fail("The email has already been taken.");
+    }
+  },
+]
+```
+
+#### Optional
+
+```
+image: ["nullable", "mimes:jpeg", "min:528"]
+```
