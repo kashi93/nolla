@@ -43,6 +43,12 @@
       - [Mimes](#mimes)
       - [Custom](#custom)
       - [Optional](#optional)
+  - [Database](#database-1)
+    - [Migrations](#migrations)
+      - [Generating Migrations](#generating-migrations)
+      - [Available Column Types](#available-column-types)
+      - [Running Migrations](#running-migrations)
+    - [Running Raw SQL Queries](#running-raw-sql-queries)
 
 
 # Installation
@@ -579,4 +585,47 @@ email: [
 
 ```
 image: ["nullable", "mimes:jpeg", "min:528"]
+```
+
+## Database
+
+Nolla database is extended from node mysql package.
+
+### Migrations
+
+#### Generating Migrations
+```
+ts-node lib/nolla create:migration -n=books
+```
+
+#### Available Column Types
+
+| Command                                    | MySql                                                                  |
+| ------------------------------------------ | ---------------------------------------------------------------------- |
+| Table.id(column = "id")                    | {{column}} BIGINT NOT NULL AUTO_INCREMENT , PRIMARY KEY ( {{column}} ) |
+| Table.bigInt(column: string)               | {{column}} BIGINT NOT NULL                                             |
+| Table.string(column: string, length = 255) | {{column}} VARCHAR(${length}) NOT NULL                                 |
+| Table.timestamp(column: string)            | {{column}} TIMESTAMP NOT NULL                                          |
+| Table.timestamps()                         | created_at TIMESTAMP NULL , updated_at TIMESTAMP NULL                  |
+| Table.nullable()                           | {{current_params}} NULL                                                |
+| Table.unique()                             | {{current_params}} UNIQUE                                              |
+| Table custom(statement: string)            | -                                                                      |
+
+#### Running Migrations
+```
+ts-node lib/nolla migrate
+```
+
+### Running Raw SQL Queries
+
+```
+import { execute } from "../../vendor/database/mysql/model/builder/execute";
+import Controller from "./controller";
+
+class UserController extends Controller {
+  async index() {
+    const users = await execute("SELECT * FROM users");
+    console.log(users);
+  }
+}
 ```
