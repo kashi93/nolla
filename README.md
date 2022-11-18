@@ -77,7 +77,7 @@ git clone https://github.com/kashi93/nolla.git project
 cd project
 cp .env.example .env
 npm install
-npm run serve / npm run start
+npm run serve
 ```
 
 
