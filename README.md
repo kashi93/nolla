@@ -1,4 +1,3 @@
-# Nolla
 
 - [Nolla](#nolla)
 - [Installation](#installation)
@@ -64,14 +63,14 @@
       - [Delete](#delete)
 
 
+# Nolla
+Nolla inspired from laravel framework,our goal is to make Laravel developer don't feel awkward when migration from laravel to node.We'll help you take your first steps as a web developer or give you a boost as you take your expertise to the next level. We can't wait to see what you build.
+
 # Installation
 
 ### Scaffold
 
-
-
 To get started, you can scaffold the project with a clone of a starter project.
-
 
 ```
 git clone https://github.com/kashi93/nolla.git project
