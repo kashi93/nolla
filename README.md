@@ -13,6 +13,7 @@
     - [Middleware](#middleware)
     - [Route Prefixes](#route-prefixes)
     - [Controller Namespace](#controller-namespace)
+    - [The Route List](#the-route-list)
   - [Middleware](#middleware-1)
     - [Defining Middleware](#defining-middleware)
     - [Registering Middleware](#registering-middleware)
@@ -236,6 +237,14 @@ You can refer to route providers.
 
 ```
 lib/app/services/route.service.ts
+```
+
+### The Route List
+
+The route:list command can easily provide an overview of all of the routes that are defined by your application:
+
+```
+ts-node lib/nolla route:list
 ```
 
 ## Middleware

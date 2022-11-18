@@ -9,6 +9,7 @@ module.exports = (() => {
     .command(require("./makeServer"))
     .command(require("./makeTest"))
     .command(require("./compile_resources"))
+    .command(require("./routeList"))
     .showHelpOnFail(true)
     .help("help", "Show usage instructions.")
     .command({

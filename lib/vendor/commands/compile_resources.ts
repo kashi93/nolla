@@ -4,7 +4,7 @@ import chalk from "chalk";
 
 export default yargs.command({
   command: "compile:resources",
-  describe: "compile all lib/resources/views/**/* to resources/views/**/*",
+  describe: "compile all lib/resources/**/* to build/resources/**/*",
   builder: {},
   async handler(argv: any) {
     await copy(
