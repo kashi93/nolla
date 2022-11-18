@@ -1,0 +1,10 @@
+import { default as Model } from "../../vendor/database/mysql/model";
+
+class ModelTemplate extends Model {
+  constructor() {
+    super();
+    this.table = "{table_name}";
+  }
+}
+
+export = new ModelTemplate();

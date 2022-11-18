@@ -21,7 +21,7 @@ export default yargs.command({
   },
   async handler(argv) {
     const path = require("path");
-    const p = `${path.dirname(require.main?.filename)}/models/`;
+    const p = `${path.dirname(require.main?.filename)}/app/models/`;
     let m = null;
 
     if (
@@ -40,7 +40,7 @@ export default yargs.command({
     const models = await fs.promises.readdir(p);
 
     for await (const model of models) {
-      if (`${String(argv.class).toLowerCase()}.model.js` == model) {
+      if (`${String(argv.class).toLowerCase()}.model.ts` == model) {
         console.log(chalk.red(`Model ${argv.class} already exist!`));
         return;
       }
@@ -51,7 +51,7 @@ export default yargs.command({
         .readFile(
           `${path.dirname(
             require.main?.filename
-          )}/vendor/template/model.template.js`,
+          )}/vendor/template/model.template.txt`,
           "utf-8"
         )
         .then((t) =>
@@ -63,14 +63,14 @@ export default yargs.command({
 
     if (m != null) {
       await fs.promises.writeFile(
-        `${p}${String(argv.class).toLowerCase()}.model.js`,
+        `${p}${String(argv.class).toLowerCase()}.model.ts`,
         m,
         "utf-8"
       );
 
       console.log(
         chalk.green(
-          `Created Model: ${String(argv.class).toLowerCase()}.model.js`
+          `Created Model: ${String(argv.class).toLowerCase()}.model.ts`
         )
       );
     }
