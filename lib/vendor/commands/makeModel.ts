@@ -57,7 +57,7 @@ export default yargs.command({
         .then((t) =>
           t
             .replace(/{table_name}/g, `${argv.table_name}`)
-            .replace(/ModelTemplate/g, `${argv.class}`)
+            .replace(/ModelTemplate/g, `${argv.class}Model`)
         );
     }
 
