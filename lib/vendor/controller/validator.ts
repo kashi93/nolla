@@ -11,6 +11,11 @@ export default class Validator {
     rule: Rule,
     sentBack: boolean = true
   ): Promise<any[] | boolean> {
+    req.body = {
+      ...req.body,
+      ...req.query,
+    };
+
     const rules = await this.prepare(rule, req);
     await Promise.all(rules.map((validation) => validation.run(req)));
     const err = validationResult(req);

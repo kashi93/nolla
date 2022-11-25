@@ -31,6 +31,12 @@ class Table {
     return new PrivateMethod();
   }
 
+  longText(column: string) {
+    col = column;
+    params.push(`${col} longtext NOT NULL`);
+    return new PrivateMethod();
+  }
+
   timestamp(column: string) {
     col = column;
     params.push(`${col} TIMESTAMP NOT NULL`);
