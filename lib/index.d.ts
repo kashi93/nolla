@@ -18,6 +18,7 @@ export interface File {
 
 export interface Request extends ExpressRequest {
   input?: (field: string) => any;
+  all?: () => { [key: string]: any };
   $file?: (field: string) => File;
 }
 

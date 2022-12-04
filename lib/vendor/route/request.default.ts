@@ -5,6 +5,7 @@ export default class RequestDefault {
 
   generateRequest(req: Request): void {
     request = req;
+    req.all = this.all;
     req.input = this.input;
     req.$file = this.file;
   }
@@ -60,5 +61,9 @@ export default class RequestDefault {
     }
 
     return null;
+  }
+
+  all() {
+    return { ...this.body, ...this.query };
   }
 }
