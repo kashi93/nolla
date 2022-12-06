@@ -5,6 +5,7 @@ module.exports = (() => {
     .command(require("./makeMigration"))
     .command(require("./makeMigrate"))
     .command(require("./makeModel"))
+    .command(require("./makeController"))
     .command(require("./generateUi"))
     .command(require("./makeServer"))
     .command(require("./makeTest"))

@@ -40,7 +40,7 @@ export default yargs.command({
     const models = await fs.promises.readdir(p);
 
     for await (const model of models) {
-      if (`${String(argv.class).toLowerCase()}.model.ts` == model) {
+      if (`${String(argv.class).toLowerCase()}.ts` == model) {
         console.log(chalk.red(`Model ${argv.class} already exist!`));
         return;
       }
@@ -55,22 +55,44 @@ export default yargs.command({
           "utf-8"
         )
         .then((t) =>
-          t
-            .replace(/{table_name}/g, `${argv.table_name}`)
-            .replace(/ModelTemplate/g, `${argv.class}Model`)
+          t.replace(/{table_name}/g, `${argv.table_name}`).replace(
+            /ModelTemplate/g,
+            `${String(argv.class)
+              .replace(/\s(.)/g, function ($1) {
+                return $1.toUpperCase();
+              })
+              .replace(/\s/g, "")
+              .replace(/^(.)/, function ($1) {
+                return $1.toLowerCase();
+              })}`
+          )
         );
     }
 
     if (m != null) {
       await fs.promises.writeFile(
-        `${p}${String(argv.class).toLowerCase()}.model.ts`,
+        `${p}${String(argv.class)
+          .replace(/\s(.)/g, function ($1) {
+            return $1.toUpperCase();
+          })
+          .replace(/\s/g, "")
+          .replace(/^(.)/, function ($1) {
+            return $1.toLowerCase();
+          })}.ts`,
         m,
         "utf-8"
       );
 
       console.log(
         chalk.green(
-          `Created Model: ${String(argv.class).toLowerCase()}.model.ts`
+          `Created Model: ${String(argv.class)
+            .replace(/\s(.)/g, function ($1) {
+              return $1.toUpperCase();
+            })
+            .replace(/\s/g, "")
+            .replace(/^(.)/, function ($1) {
+              return $1.toLowerCase();
+            })}.ts`
         )
       );
     }

@@ -1,9 +1,9 @@
 import yargs from "yargs";
-import { plainController, resourceController } from "../template/controller";
 import fs from "fs";
+import chalk from "chalk";
 
 export default yargs.command({
-  command: "make:controller",
+  command: "create:controller",
   describe: "Create a new controller class",
   builder: {
     name: {
@@ -12,50 +12,110 @@ export default yargs.command({
       demandOption: true,
       type: "string",
     },
-    resource: {
-      alias: "r",
-      demandOption: false,
-      describe: "Generate controller with resources app method",
-      type: "boolean",
-      default: false,
-    },
+    // resource: {
+    //   alias: "r",
+    //   demandOption: false,
+    //   describe: "Generate controller with resources app method",
+    //   type: "boolean",
+    //   default: false,
+    // },
   },
   async handler(argv) {
-    let p = "app/controllers/";
-    const dir: any[] = String(argv.name).split("/");
-    const n = dir.pop();
-    let c: any = null;
+    const path = require("path");
+    let p = `${path.dirname(require.main?.filename)}/app/controllers/`;
+    const arr1 = String(argv.name).split("/");
+    const con = arr1[arr1.length - 1];
+    let m = null;
+    let condir = "./";
+    let typesdir = "../..";
+    arr1.pop();
 
-    if (!Number.isNaN(parseInt(String(argv.name)))) {
-      console.log("Controller name invalid!");
+    if (
+      !Number.isNaN(parseInt(String(con))) ||
+      !Number.isNaN(parseInt(String(con)))
+    ) {
+      console.log(chalk.red("Invalid name!"));
       return;
     }
 
-    if (dir.length > 0) {
-      for (let index = 0; index < dir.length; index++) {
-        p += dir[index];
-        if (!fs.existsSync(p)) {
-          await fs.promises.mkdir(p);
-        }
-        p += "/";
+    if (con == "controller") {
+      console.log(chalk.red("Invalid name!"));
+      return;
+    }
+
+    if (con.trim().length > 0) {
+      for await (const dir of arr1) {
+        typesdir += "/..";
+        condir += "../";
+        p += dir.toLocaleLowerCase() + "/";
+        fs.promises.mkdir(p);
+      }
+
+      m = await fs.promises
+        .readFile(
+          `${path.dirname(
+            require.main?.filename
+          )}/vendor/template/controller.template.txt`,
+          "utf-8"
+        )
+        .then((t) =>
+          t
+            .replace(
+              /ControllerTemplate/g,
+              `${con
+                .replace(/\s(.)/g, function ($1) {
+                  return $1.toUpperCase();
+                })
+                .replace(/\s/g, "")
+                .replace(/^(.)/, function ($1) {
+                  return $1.toLowerCase();
+                })}`
+            )
+            .replace(/con_dir/g, `${condir}controller`)
+            .replace(/types_dir/g, typesdir)
+        );
+    }
+
+    if (m != null) {
+      try {
+        await fs.promises.open(
+          `${p}${String(con)
+            .replace(/\s(.)/g, function ($1) {
+              return $1.toUpperCase();
+            })
+            .replace(/\s/g, "")
+            .replace(/^(.)/, function ($1) {
+              return $1.toLowerCase();
+            })}.ts`,
+          "r"
+        );
+        console.log(chalk.red(`Controller ${con} already exist!`));
+      } catch (error) {
+        await fs.promises.writeFile(
+          `${p}${String(con)
+            .replace(/\s(.)/g, function ($1) {
+              return $1.toUpperCase();
+            })
+            .replace(/\s/g, "")
+            .replace(/^(.)/, function ($1) {
+              return $1.toLowerCase();
+            })}.ts`,
+          m,
+          "utf-8"
+        );
+        console.log(
+          chalk.green(
+            `Created Controller: ${String(con)
+              .replace(/\s(.)/g, function ($1) {
+                return $1.toUpperCase();
+              })
+              .replace(/\s/g, "")
+              .replace(/^(.)/, function ($1) {
+                return $1.toLowerCase();
+              })}.ts`
+          )
+        );
       }
     }
-
-    if (fs.existsSync(`${p}${n}.ts`)) {
-      console.log("Controller already exists!");
-      return;
-    }
-
-    if (argv.resource) {
-      c = resourceController(String(argv.name));
-    } else {
-      c = plainController(String(argv.name));
-    }
-
-    if (c != null) {
-      await fs.promises.writeFile(`${p}${n}.ts`, c, "utf-8");
-    }
-
-    console.log("Controller successfully created");
   },
 });

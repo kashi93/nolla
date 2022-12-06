@@ -10,7 +10,7 @@ import { execSync } from "child_process";
 export default yargs.command({
   command: "generate:ui",
   describe:
-    "Generate front-end scaffolding for the application preset type (bootstrap, vue, react)",
+    "Generate front-end scaffolding for the application preset type (vue, react)",
   builder: {
     type: {
       alias: "t",
