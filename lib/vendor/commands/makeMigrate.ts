@@ -1,6 +1,5 @@
 import yargs from "yargs";
 import fs from "fs";
-import Table, { params } from "../database/mysql/table";
 import { checkMysqlTableExist } from "../rainbows/checkMysqlTableExist";
 import migrationModel from "../database/mysql/model/migration.model";
 import chalk from "chalk";
@@ -17,51 +16,46 @@ export default yargs.command({
     },
   },
   async handler(argv) {
+    const path = require("path");
+
     if ((await config("database.default")) == "mysql") {
-      const path = require("path");
-
       if (!(await checkMysqlTableExist("migrations"))) {
-        const { default: mysql } = require(`../database/mysql/connection`);
-        const { Migration } = require(`${path.dirname(
-          require.main?.filename
-        )}/migrations/migrations_1664719972281`);
-        const m2 = Migration.up();
-        await new mysql().query(
-          `CREATE TABLE ${m2.name} (${params.join(",")})`
+        const { default: Migration } = await import(
+          "../database/mysql/migrations/000000_migrations"
         );
+        await Migration.up();
         await migrationModel.create({
-          migration: "migrations_1664719972281.js",
+          migration: "000000_migrations",
         });
-        Table.resetParams();
       }
-
-      const p = `${path.dirname(require.main?.filename)}/migrations/`;
-      const migrations = await fs.promises.readdir(p);
-      for await (const migrate of migrations) {
-        const { default: mysql } = require(`../database/mysql/connection`);
-        const { Migration } = require(`${p}/${migrate}`);
-        if (!argv.rollback) {
-          const m2 = Migration.up();
-          if (m2.name != "migrations") {
-            if (
-              (await migrationModel.where("migration", "=", migrate).first()) ==
-              null
-            ) {
-              await new mysql().query(
-                `CREATE TABLE ${m2.name} (${params.join(",")})`
-              );
-              await migrationModel.create({
-                migration: migrate,
-              });
-            }
-          }
-        } else {
-          const m2 = Migration.down();
-          await new mysql().query(`DROP TABLE ${m2.name}`);
-        }
-        Table.resetParams();
-      }
-      console.log(chalk.green(`Migrations successfully`));
     }
+
+    const p = `${path.dirname(require.main?.filename)}/migrations/`;
+    const migrations = await fs.promises.readdir(p);
+
+    for await (const migrate of migrations) {
+      const { default: Migration } = await import(`${p}/${migrate}`);
+      const name = migrate.split(".");
+      name.pop();
+      await Migration.up();
+      if (!argv.rollback) {
+        if (
+          (await migrationModel
+            .where("migration", "=", name.join(""))
+            .first()) == null
+        ) {
+          await migrationModel.create({
+            migration: name.join(""),
+          });
+        }
+      } else {
+        const { default: m1 } = await import(
+          "../database/mysql/migrations/000000_migrations"
+        );
+        await m1.down();
+        await Migration.down();
+      }
+    }
+    console.log(chalk.green(`Migrations successfully`));
   },
 });

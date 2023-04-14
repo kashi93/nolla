@@ -6,7 +6,7 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "sourceMap": false,
-    "declaration": true,
+    "declaration": false,
     "allowJs": true,
     "noLib": false,
     "resolveJsonModule": true,

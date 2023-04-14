@@ -34,7 +34,7 @@ export type Rules =
   | "nullable"
   | `mimes:${string}`
   | `max:${number}`
-  | Function;
+  | ((attr: string, val: any, fail: Function) => any);
 
 export interface Rule {
   [field: string]: Rules[];

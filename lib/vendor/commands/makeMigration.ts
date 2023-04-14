@@ -12,6 +12,18 @@ export default yargs.command({
       type: "string",
       describe: "The name of the migration",
     },
+    create: {
+      alias: "c",
+      required: false,
+      type: "string",
+      describe: "The table to be created",
+    },
+    table: {
+      alias: "t",
+      required: false,
+      type: "string",
+      describe: "The table to migrate",
+    },
   },
   async handler(argv) {
     const path = require("path");
@@ -19,37 +31,42 @@ export default yargs.command({
     let m = null;
     let fileName = "";
 
-    const migrations = await fs.promises.readdir(p);
-    for await (const migrate of migrations) {
-      const { Migration } = require(`${p}/${migrate}`);
-      if (Migration.up != null) {
-        const m2 = Migration.up();
-        if (m2.name == argv.name) {
-          console.log(chalk.red(`Migration ${argv.name} already exist!`));
-          return;
-        }
-      }
-    }
-
-    if (!Number.isNaN(parseInt(String(argv.name)))) {
-      console.log(chalk.red("Migrations name invalid!"));
-      return;
-    }
-
-    if (argv.name != "") {
+    if (String(argv.name || argv.create || argv.table).trim().length > 0) {
       m = await fs.promises
         .readFile(
           `${path.dirname(
             require.main?.filename
-          )}/vendor/template/migrations.js`,
+          )}/vendor/template/migrations.txt`,
           "utf-8"
         )
-        .then((t) => t.replace(/{table_name}/g, `${argv.name}`));
-      fileName = `${argv.name}_${new Date().getTime()}`;
+        .then((t) =>
+          t
+            .replace(
+              /{table_name}/g,
+              `${argv.table || argv.create || argv.name}`
+            )
+            .replace(
+              /{operation}/g,
+              String(argv.table || "").trim().length < 1 ? "create" : "table"
+            )
+            .replace(
+              /{down_scalfold}/g,
+              String(argv.table || "").trim().length < 1
+                ? `await Schema.dropIfExists("${
+                    argv.table || argv.create || argv.name
+                  }")`
+                : "//"
+            )
+            .replace(
+              /{table_scalfold}/g,
+              String(argv.table || "").trim().length < 1 ? "table.id();" : "//"
+            )
+        );
+      fileName = `${new Date().getTime()}_${argv.name}`;
     }
 
     if (m != null) {
-      await fs.promises.writeFile(`${p}${fileName}.js`, m, "utf-8");
+      await fs.promises.writeFile(`${p}${fileName}.ts`, m, "utf-8");
       console.log(chalk.green(`Created Migration: ${p}${fileName}`));
     }
   },
