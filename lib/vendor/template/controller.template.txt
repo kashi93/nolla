@@ -1,8 +1,0 @@
-import { Request, Response } from "types_dir";
-import Controller from "con_dir";
-
-class ControllerTemplate extends Controller {
-  //
-}
-
-export = ControllerTemplate;
