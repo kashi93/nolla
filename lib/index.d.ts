@@ -22,8 +22,8 @@ export interface Request extends ExpressRequest {
   $file?: (field: string) => File;
 }
 
-interface Response extends ExpressResponse {}
-interface Next extends ExpressNextFunction {}
+interface Response extends ExpressResponse { }
+interface Next extends ExpressNextFunction { }
 
 export type Rules =
   | "required"
@@ -63,6 +63,17 @@ export interface RouteCollection {
   argv: [controllerClassPath: string, method: string] | Function | null;
   method: "POST" | "GET" | null;
   name: string | null;
+}
+
+export interface TableConfig {
+  nullable?: boolean;
+  unique?: boolean;
+  default?: any;
+  after?: string;
+  alterMode?: "ADD" | "MODIFY";
+  precision?: number;
+  scale?: number;
+  length?:number
 }
 
 export const thisIsAModule = true;

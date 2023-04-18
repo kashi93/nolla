@@ -37,13 +37,13 @@ export default yargs.command({
       const { default: Migration } = await import(`${p}/${migrate}`);
       const name = migrate.split(".");
       name.pop();
-      await Migration.up();
       if (!argv.rollback) {
         if (
           (await migrationModel
             .where("migration", "=", name.join(""))
             .first()) == null
         ) {
+          await Migration.up();
           await migrationModel.create({
             migration: name.join(""),
           });

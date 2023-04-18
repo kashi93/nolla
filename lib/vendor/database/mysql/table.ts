@@ -1,416 +1,60 @@
-// let col: Readonly<String> = "";
+import { TableConfig } from "../../..";
+
 export let params: string[] = [];
 export const resetParams = () => {
   params = [];
 };
 
-// class PrivateMethod {
-//   nullable() {
-//     const current_params = params[params.length - 1].replace(/NOT NULL/g, "");
-//     params[params.length - 1] = `${current_params} NULL`;
-//   }
-//   unique() {
-//     const current_params = params[params.length - 1];
-//     params[params.length - 1] = `${current_params} UNIQUE`;
-//   }
-//   default(val: string) {
-//     const current_params = params[params.length - 1];
-//     params[params.length - 1] = `${current_params} DEFAULT '${val}'`;
-//   }
-//   first(column: string) {
-//     params[params.length - 1] = `[ FIRST ${column} ]`;
-//   }
-//   after(column: string) {
-//     params[params.length - 1] = `[ AFTER  ${column} ]`;
-//   }
-// }
+const configTranslate = (query: string, config: TableConfig): void => {
+  if ((config.nullable || false) === true) {
+    query += " NULL";
+  } else {
+    query += " NOT NULL";
+  }
+
+  if ((config.unique || false) === true) {
+    query += " UNIQUE";
+  }
+
+  if (String(config.default || "").trim().length > 0) {
+    query += ` DEFAULT \`${config.default}\``;
+  }
+
+  if (String(config.after || "").trim().length > 0) {
+    query += ` AFTER \`${config.after}\``;
+  }
+
+  if (config.alterMode != null) {
+    query = `${config.alterMode} ${query}`;
+  }
+
+  params.push(query);
+}
 
 class Table {
-  id(
-    column = "id",
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} BIGINT NOT NULL AUTO_INCREMENT`);
-    } else {
-      params.push(`${col} BIGINT NOT NULL AUTO_INCREMENT`);
-    }
-    params.push(`PRIMARY KEY (${col})`);
+  id(column: string = "id") {
+    params.push(`${column} BIGINT NOT NULL AUTO_INCREMENT`);
+    params.push(`PRIMARY KEY (${column})`);
   }
 
-  bigIncrements(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(
-        `${config.alterMode} ${col} BIGINT UNSIGNED NOT NULL AUTO_INCREMENT`
-      );
-    } else {
-      params.push(`${col} BIGINT UNSIGNED NOT NULL AUTO_INCREMENT`);
+  double(column: string, config: TableConfig = {}) {
+    let query = `\`${column}\` DOUBLE`;
+
+    if (config.precision != null && config.scale != null) {
+      query += `(${config.precision},${config.scale})`;
     }
+
+    configTranslate(query, config)
   }
 
-  binary(
-    column: string,
-    config: {
-      nullable?: boolean;
-      unique?: boolean;
-      default?: any;
-      first?: string;
-      last?: string;
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    // col = column;
-    let query = `'${column}' BLOB`;
+  float(column: string, config: TableConfig = {}) {
+    let query = `\`${column}\` FLOAT`;
 
-    if ((config.nullable || false) === true) {
-      query += "NULL";
-    } else {
-      query += "NOT NULL";
+    if (config.precision != null && config.scale != null) {
+      query += `(${config.precision},${config.scale})`;
     }
 
-    if ((config.unique || false) === true) {
-      query += "UNIQUE";
-    }
-
-    if (String(config.default || "").trim().length > 0) {
-      query += `DEFAULT '${config.default}'`;
-    }
-
-    if (String(config.first || "").trim().length > 0) {
-      query += `[ FIRST ${config.first} ]`;
-    }
-
-    if (String(config.last || "").trim().length > 0) {
-      query += `[ LAST ${config.last} ]`;
-    }
-
-    if (config.alterMode != null) {
-      query = `${config.alterMode} ${query}`;
-    }
-
-    params.push(query);
-  }
-
-  boolean(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} BOOLEAN NOT NULL`);
-    } else {
-      params.push(`${col} BOOLEAN NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  char(
-    column: string,
-    config: {
-      length: number;
-      alterMode?: "ADD" | "MODIFY";
-    }
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} CHAR(${length}) NOT NULL`);
-    } else {
-      params.push(`${col} CHAR(${length}) NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  dateTime(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} DATETIME NOT NULL`);
-    } else {
-      params.push(`${col} DATETIME NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  date(
-    column: string,
-    config: {
-      length: number;
-      alterMode?: "ADD" | "MODIFY";
-    }
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} DATE NOT NULL`);
-    } else {
-      params.push(`${col} DATE NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  decimal(
-    column: string,
-    config: {
-      precision?: number;
-      scale?: number;
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(
-        `${config.alterMode} ${col} DECIMAL(${config.precision || 8},${
-          config.scale || 2
-        }) NOT NULL`
-      );
-    } else {
-      params.push(
-        `${col} DECIMAL(${config.precision || 8},${config.scale || 2}) NOT NULL`
-      );
-    }
-
-    return new PrivateMethod();
-  }
-
-  double(
-    column: string,
-    config: {
-      precision?: number;
-      scale?: number;
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(
-        `${config.alterMode} ${col} DOUBLE(${config.precision},${config.scale}) NOT NULL`
-      );
-    } else {
-      params.push(
-        `${col} DOUBLE(${config.precision},${config.scale}) NOT NULL`
-      );
-    }
-    return new PrivateMethod();
-  }
-
-  float(
-    column: string,
-    config: {
-      precision?: number;
-      scale?: number;
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(
-        `${config.alterMode} ${col} FLOAT(${config.precision},${config.scale}) NOT NULL`
-      );
-    } else {
-      params.push(`${col} FLOAT(${config.precision},${config.scale}) NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  enum(
-    column: string,
-    values: string[],
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    const val = values.map((v) => `'${v}'`);
-    if (config.alterMode != null) {
-      params.push(
-        `${config.alterMode} ${col} ENUM (${val.join(",")}) NOT NULL`
-      );
-    } else {
-      params.push(`${col} ENUM (${val.join(",")}) NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  int(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} INTEGER NOT NULL`);
-    } else {
-      params.push(`${col} INTEGER NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  bigInt(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} BIGINT NOT NULL`);
-    } else {
-      params.push(`${col} BIGINT NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  unsignedBigInt(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} BIGINT UNSIGNED NOT NULL`);
-    } else {
-      params.push(`${col} BIGINT UNSIGNED NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  smallInt(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} SMALLINT NOT NULL`);
-    } else {
-      params.push(`${col} SMALLINT NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  unsignedSmallInt(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} SMALLINT UNSIGNED NOT NULL`);
-    } else {
-      params.push(`${col} SMALLINT UNSIGNED NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  tinyInt(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} TINYINT NOT NULL`);
-    } else {
-      params.push(`${col} TINYINT NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  unsignedTinyInt(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} TINYINT UNSIGNED NOT NULL`);
-    } else {
-      params.push(`${col} TINYINT UNSIGNED NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  string(
-    column: string,
-    config: {
-      length?: number;
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(
-        `${config.alterMode} ${col} VARCHAR(${config.length || 255}) NOT NULL`
-      );
-    } else {
-      params.push(`${col} VARCHAR(${config.length || 255}) NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  longText(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} LONGTEXT NOT NULL`);
-    } else {
-      params.push(`${col} LONGTEXT NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  mediumText(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} MEDIUMTEXT NOT NULL`);
-    } else {
-      params.push(`${col} MEDIUMTEXT NOT NULL`);
-    }
-    return new PrivateMethod();
-  }
-
-  timestamp(
-    column: string,
-    config: {
-      alterMode?: "ADD" | "MODIFY";
-    } = {}
-  ) {
-    col = column;
-    if (config.alterMode != null) {
-      params.push(`${config.alterMode} ${col} TIMESTAMP NOT NULL`);
-    } else {
-      params.push(`${col} TIMESTAMP NOT NULL`);
-    }
-    return new PrivateMethod();
+    configTranslate(query, config)
   }
 
   timestamps() {
@@ -421,6 +65,27 @@ class Table {
   custom(statement: string) {
     params.push(statement);
   }
+
+  bigIncrements = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` BIGINT UNSIGNED AUTO_INCREMENT`, config)
+  binary = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` BLOB`, config)
+  boolean = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` BOOLEAN`, config)
+  char = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` CHAR(${length})`, config)
+  dateTime = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` DATETIME`, config)
+  date = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` DATE NOT NULL`, config)
+  decimal = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` DECIMAL(${config.precision || 8},${config.scale || 2})`, config)
+  enum = (column: string,values: string[],config: TableConfig = {})=>configTranslate(`\`${column}\` ENUM (${values.map((v) => `'${v}'`).join(",")})`, config)
+  int = (column: string, config: TableConfig= {}) => configTranslate(`\`${column}\` INTEGER`, config)
+  bigInt = (column: string, config: TableConfig= {}) => configTranslate(`\`${column}\` BIGINT`, config)
+  unsignedBigInt = (column: string, config: TableConfig= {}) => configTranslate(`\`${column}\` BIGINT UNSIGNED`, config)
+  smallInt = (column: string, config: TableConfig= {}) => configTranslate(`\`${column}\` SMALLINT`, config)
+  unsignedSmallInt = (column: string, config: TableConfig= {}) => configTranslate(`\`${column}\` SMALLINT UNSIGNED`, config)
+  tinyInt = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` TINYINT`, config)
+  unsignedTinyInt = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` TINYINT UNSIGNED`, config)
+  string = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` VARCHAR(${config.length || 255})`, config)
+  longText = (column: string, config: TableConfig= {}) => configTranslate(`\`${column}\` LONGTEXT`, config)
+  mediumText = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` MEDIUMTEXT`, config)
+  timestamp = (column: string, config: TableConfig = {}) => configTranslate(`\`${column}\` TIMESTAMP`, config)
+  dropColumn = (column: string) => params.push(` DROP COLUMN \`${column}\``)
 }
 
 export default new Table();
