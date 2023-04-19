@@ -1,8 +1,9 @@
+import { MySqlTable } from "nolla-core";
 import Schema from "nolla-core/src/database/mysql/schema";
 
 class Migration {
   async up() {
-    await Schema.create("users", (table) => {
+    await Schema.create("users", (table:MySqlTable) => {
       table.id();
       table.string("name");
       table.string("email", { unique: true })

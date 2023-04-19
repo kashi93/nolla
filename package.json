@@ -8,7 +8,8 @@
 		"dev": "nodemon",
 		"build": "rm -rf dist && ts-node nolla compile:resources && tsc",
 		"cleanup": "rm -rf dist",
-		"lucy": "ts-node nolla lucy"
+		"lucy-dev": "ts-node nolla lucy",
+		"lucy": "dist/nolla lucy"
 	},
 	"keywords": [],
 	"author": "",
