@@ -1,21 +1,22 @@
 {
-  "name": "nolla",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "dist/nolla serve",
-    "dev": "nodemon",
-    "build": "rm -rf dist && ts-node nolla compile:resources && tsc",
-    "cleanup": "rm -rf dist"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "nolla-core": "^1.0.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.22"
-  }
+	"name": "nolla",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "dist/nolla serve",
+		"dev": "nodemon",
+		"build": "rm -rf dist && ts-node nolla compile:resources && tsc",
+		"cleanup": "rm -rf dist",
+		"lucy": "ts-node nolla lucy"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"nolla-core": "^1.0.0"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.22"
+	}
 }
