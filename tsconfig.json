@@ -1,25 +1,22 @@
 {
   "compilerOptions": {
-    "types": [
-      "node"
-    ],
     "module": "commonjs",
-    "target": "ES5",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "es2017",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
     "noImplicitAny": false,
-    "esModuleInterop": true,
-    "sourceMap": false,
-    "declaration": false,
-    "allowJs": true,
-    "noLib": false,
-    "resolveJsonModule": true,
-    "outDir": "./build",
-    "rootDir": "./"
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false
   },
-  "include": [
-    "./*.ts",
-    "./*.js",
-    "./tests/unit_list.json",
-    "./vendor/template/model.template.balk",
-    "nolla.ts"
-  ]
+  "exclude": ["node_modules", "public", "storage", "tests","webpack","dist"]
 }

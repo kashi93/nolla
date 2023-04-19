@@ -4,17 +4,18 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node build/nolla serve",
-    "serve": "ts-node lib/nolla serve",
-    "dev": "webpack --mode=development",
-    "watch": "webpack --mode=development --watch",
-    "build": "ts-node lib/nolla compile:resources && tsc",
-    "prod": "webpack --mode=production"
+    "start": "dist/nolla serve",
+    "dev": "nodemon",
+    "build": "rm -rf dist && ts-node nolla compile:resources && tsc",
+    "cleanup": "rm -rf dist"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nolla-core":"^1.0.0"
+    "nolla-core": "^1.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
   }
 }

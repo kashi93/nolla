@@ -2,11 +2,13 @@
   "verbose": true,
   "ignore": [
     "public/",
-    "lib/resources/js/",
-    "lib/storage/",
+    "storage/",
     "resources/js/",
     "package.json",
-    "package-lock.json"
+    "package-lock.json",
+    "dist"
   ],
-  "exec": "ts-node lib/nolla serve"
+  "ext": "ts,js,ejs",
+  "quiet":true,
+  "exec": "ts-node nolla serve"
 }
