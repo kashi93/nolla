@@ -1,22 +1,28 @@
 {
   "compilerOptions": {
+    "types": [
+      "node"
+    ],
     "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
-    "sourceMap": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "target": "ES5",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "sourceMap": false,
+    "declaration": false,
+    "allowJs": true,
+    "noLib": false,
+    "resolveJsonModule": true,
     "outDir": "./dist",
-    "baseUrl": "./",
-    "incremental": true,
-    "skipLibCheck": true,
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "rootDir": "./lib"
   },
-  "exclude": ["node_modules", "public", "storage", "tests","webpack","dist"]
+  "exclude": [
+    "./vite.config.ts",
+    "./lib/resources/**/*",
+    "node_modules",
+    "dist/**/*",
+    "./postcss.config.js",
+    "./tailwind.config.js"
+  ]
 }

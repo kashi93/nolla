@@ -1,23 +1,31 @@
 {
-	"name": "nolla",
-	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"scripts": {
-		"start": "dist/nolla serve",
-		"dev": "nodemon",
-		"build": "rm -rf dist && ts-node nolla compile:resources && tsc",
-		"cleanup": "rm -rf dist",
-		"lucy-dev": "ts-node nolla lucy",
-		"lucy": "dist/nolla lucy"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"nolla-core": "^1.0.0"
-	},
-	"devDependencies": {
-		"nodemon": "^2.0.22"
-	}
+  "name": "nolla-v2",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "serve": "node dist/nolla serve",
+    "dev": "ts-node lib/nolla serve",
+    "build": "rm -rf dist && tsc && run-p build:server \"build-only {@}\" --",
+    "build:server": "vite build --ssr src/client.tsx",
+    "build-only": "vite build"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^6.16.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@tsconfig/node18": "^18.2.2",
+    "@types/node": "^18.17.15",
+    "@types/react": "^17.0.65",
+    "@types/react-dom": "^17.0.20",
+    "@vitejs/plugin-react": "^4.0.3",
+    "autoprefixer": "^10.4.15",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "tailwindcss": "^3.3.3",
+    "postcss": "^8.4.29"
+  }
 }
