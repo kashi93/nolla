@@ -1,7 +1,4 @@
 import { Route } from "nolla-core";
+import exampleController from "../app/controllers/example.controller";
 
-Route.get("test", function () {
-    return {
-        a: 1
-    }
-})
+Route.post("test", [exampleController, "index"])

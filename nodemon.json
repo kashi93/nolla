@@ -1,0 +1,12 @@
+{
+  "verbose": false,
+  "quiet":true,
+  "watch": [
+    "lib/**/*"
+  ],
+  "ext": "ts,js",
+  "ignore": [
+    "lib/resources/"
+  ],
+  "exec": "npm run dev"
+}

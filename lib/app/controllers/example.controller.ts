@@ -1,9 +1,9 @@
 import Controller from "./controller";
 
 class ExampleController extends Controller {
-    // index() {
-    //     return view("welcome")
-    // }
+    index() {
+        return request.filledQuery("hi");
+    }
 }
 
 export default new ExampleController();
